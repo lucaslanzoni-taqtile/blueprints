@@ -71,6 +71,16 @@ body{font-family:'Inter',-apple-system,sans-serif;background:#F0F2F5;color:#1A1A
 .sum-t{width:100%;border-collapse:collapse;font-size:12px}
 .sum-t th{text-align:left;padding:7px 12px;background:#F8F9FA;font-size:10px;text-transform:uppercase;color:#777;letter-spacing:.05em}
 .sum-t td{padding:7px 12px;border-bottom:1px solid #F0F0F0;vertical-align:top}
+#refs{margin:0 40px 40px;background:white;border-radius:8px;padding:24px 32px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+#refs h2{font-size:15px;font-weight:700;color:#1A1A2E;margin-bottom:6px}
+#refs .refs-intro{font-size:12px;color:#777;margin-bottom:20px;line-height:1.6;font-style:italic}
+.refs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.ref-group{border:1px solid #E8E8E8;border-radius:6px;padding:14px 16px}
+.ref-group h3{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#555;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #F0F0F0}
+.ref-item{margin-bottom:8px}
+.ref-item .ref-name{font-size:12px;font-weight:600;color:#1A1A2E}
+.ref-item .ref-desc{font-size:11px;color:#777;margin-top:2px;line-height:1.5}
+.ref-item:last-child{margin-bottom:0}
 </style>
 </head>
 <body>
@@ -84,6 +94,97 @@ body{font-family:'Inter',-apple-system,sans-serif;background:#F0F2F5;color:#1A1A
   <div class="steps-area" id="steps-area"></div>
 </div></div>
 <div id="summary"></div>
+<div id="refs">
+  <h2>Bases de Referência</h2>
+  <p class="refs-intro">Este blueprint foi construído a partir de análise de fontes secundárias públicas. Nenhuma informação interna ou confidencial do TikTok foi utilizada. As categorias abaixo refletem as bases de conhecimento consultadas para mapear o ciclo de venda e onboarding enterprise.</p>
+  <div class="refs-grid">
+
+    <div class="ref-group">
+      <h3>Documentação Oficial TikTok for Business</h3>
+      <div class="ref-item">
+        <div class="ref-name">TikTok for Business — Help Center</div>
+        <div class="ref-desc">Documentação pública sobre Business Center, Ads Manager, configuração de pixel, eventos e brand safety. Base para o mapeamento das Fases 4 e 5.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-name">TikTok Creative Center</div>
+        <div class="ref-desc">Dados públicos de performance de criativos por vertical, benchmarks de engajamento e tendências de formato. Base para as lanes de criativo e análise de presença orgânica.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-name">TikTok for Business Blog &amp; Newsroom</div>
+        <div class="ref-desc">Cases publicados de anunciantes enterprise (CPG, varejo, financeiro), metodologias de mensuração e frameworks de full-funnel. Base para KPIs e métricas por fase.</div>
+      </div>
+    </div>
+
+    <div class="ref-group">
+      <h3>Relatórios de Mercado e Pesquisa Setorial</h3>
+      <div class="ref-item">
+        <div class="ref-name">eMarketer / Insider Intelligence</div>
+        <div class="ref-desc">Relatórios anuais sobre investimento em mídia digital, share de plataformas de vídeo e comportamento de anunciantes enterprise em mercados emergentes, incluindo Brasil e LATAM.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-name">Kantar — TikTok Brand Impact Studies</div>
+        <div class="ref-desc">Estudos de eficácia de campanhas no TikTok por vertical, com dados de brand awareness, consideration e purchase intent. Base para benchmarks de KPI por fase do funil.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-name">Nielsen — Digital Ad Ratings &amp; Brand Effect</div>
+        <div class="ref-desc">Métricas de alcance, frequência e impacto de campanhas em plataformas de vídeo social. Referência para projeções do media plan (Fase 3) e monitoramento early (Fase 5).</div>
+      </div>
+    </div>
+
+    <div class="ref-group">
+      <h3>Publicações Setoriais de Mídia e Marketing</h3>
+      <div class="ref-item">
+        <div class="ref-name">Digiday</div>
+        <div class="ref-desc">Cobertura editorial sobre o modelo de vendas enterprise do TikTok, estrutura de relacionamento com agências, desafios de brand safety e evolução do produto de mídia para grandes anunciantes.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-name">Adweek</div>
+        <div class="ref-desc">Análises sobre estratégia comercial do TikTok, cases de CPGs e varejistas, e cobertura de lançamentos de novos formatos de anúncio para contas enterprise.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-name">Marketing Week</div>
+        <div class="ref-desc">Perspectiva de grandes anunciantes sobre ciclos de decisão de mídia, critérios de qualificação de plataforma e processo de onboarding em novas plataformas digitais.</div>
+      </div>
+    </div>
+
+    <div class="ref-group">
+      <h3>Inteligência de Mercado via LinkedIn</h3>
+      <div class="ref-item">
+        <div class="ref-name">Job Descriptions — TikTok Enterprise Sales (LATAM)</div>
+        <div class="ref-desc">Análise de descrições públicas de cargos do time de contas enterprise do TikTok em Brasil e LATAM. Base para mapeamento de atores, responsabilidades e estrutura de ecossistema multifuncional.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-name">Perfis Públicos — Account Managers e Global Directors</div>
+        <div class="ref-desc">Análise de trajetórias e descrições de cargo de executivos de contas enterprise do TikTok para inferir fluxo de trabalho, ferramentas e dinâmica de relacionamento com anunciantes.</div>
+      </div>
+    </div>
+
+    <div class="ref-group">
+      <h3>Benchmarks de Processos B2B Enterprise</h3>
+      <div class="ref-item">
+        <div class="ref-name">Gartner — B2B Sales Enablement &amp; Enterprise Buying Cycles</div>
+        <div class="ref-desc">Frameworks de ciclo de venda enterprise, mapeamento de comitês de compra e benchmarks de tempo por fase. Base para as estimativas de processTime e waitTime em cada step.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-name">Forrester — Digital Advertising Platforms</div>
+        <div class="ref-desc">Avaliações de plataformas de mídia programática e social, com análise de critérios de seleção por anunciantes enterprise e processo de onboarding técnico.</div>
+      </div>
+    </div>
+
+    <div class="ref-group">
+      <h3>Contexto Metodológico</h3>
+      <div class="ref-item">
+        <div class="ref-name">Service Blueprint Methodology — Nielsen Norman Group</div>
+        <div class="ref-desc">Referência metodológica para estrutura de blueprint de serviço: definição de lanes, atores, sistemas, artefatos e linhas de visibilidade. Base para o formato visual deste documento.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-name">Taqtile — Análise Proprietária</div>
+        <div class="ref-desc">Síntese e estruturação do blueprint realizadas pela Taqtile com base nas fontes acima. Interpretações, inferências e oportunidades de IA são de autoria da Taqtile e refletem visão estratégica própria.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <script>
 var TITLE = "BLUEPRINT: TIKTOK — ENTERPRISE SALES & ONBOARDING";
