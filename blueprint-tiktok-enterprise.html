@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Blueprint: TikTok Enterprise Sales & Onboarding</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:#F0F2F5;color:#1A1A2E;font-size:13px}
+#page-header{background:linear-gradient(135deg,#010101 0%,#1a1a2e 100%);color:white;padding:28px 40px;border-bottom:4px solid #FE2C55}
+#page-header h1{font-size:22px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+#page-header .sub{font-size:13px;color:rgba(255,255,255,.55);margin-top:5px}
+#legend{display:flex;gap:20px;padding:10px 40px;background:white;border-bottom:1px solid #E0E0E0;flex-wrap:wrap;align-items:center}
+.lg-title{font-size:10px;font-weight:700;color:#888;text-transform:uppercase;white-space:nowrap}
+.lg-group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:600;color:white;white-space:nowrap}
+#bp-wrap{overflow-x:auto;padding:20px 0 40px}
+#bp{display:flex;min-width:max-content;align-items:stretch}
+.labels{width:148px;flex-shrink:0;position:sticky;left:0;z-index:10;background:white;border-right:2px solid #CCC;box-shadow:4px 0 10px rgba(0,0,0,.1)}
+.lbl{display:flex;align-items:center;justify-content:flex-end;padding:0 10px;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#777;text-align:right;border-bottom:1px solid #E8E8E8}
+.lbl.l-ph{height:38px;background:#F5F5F5}
+.lbl.l-hd{height:78px;background:#F5F5F5}
+.lbl.l-ac{height:58px;background:#FFF8E1;color:#BF360C}
+.lbl.l-md{height:42px;background:#FAFAFA}
+.lbl.l-pr{height:98px;background:white}
+.lbl.l-pa{height:78px;background:#FFF5F5;color:#B71C1C}
+.lbl.l-sy{height:48px;background:#F3F0FF;color:#4527A0}
+.lbl.l-ar{height:48px;background:#E8F4FD;color:#1565C0}
+.lbl.l-tm{height:42px;background:#FAFAFA}
+.lbl.l-as{height:68px;background:#E8F5E9;color:#1B5E20}
+.lbl.l-or{height:68px;background:#E3F2FD;color:#0D47A1}
+.lbl.l-au{height:68px;background:#F3E5F5;color:#4A148C}
+.lbl.l-me{height:48px;background:#FAFAFA}
+.lbl.l-ri{height:48px;background:#FFF5F5;color:#B71C1C}
+.steps-area{display:flex}
+.phase-group{display:flex;flex-direction:column;border-right:3px solid #CCC}
+.ph-banner{height:38px;display:flex;align-items:center;padding:0 14px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:white}
+.ph-steps{display:flex}
+.sc{width:268px;flex-shrink:0;border-right:1px solid #E0E0E0;display:flex;flex-direction:column}
+.sc.wait{background:repeating-linear-gradient(45deg,transparent,transparent 9px,rgba(0,0,0,.025) 9px,rgba(0,0,0,.025) 18px)}
+.s-hd{height:78px;padding:9px 11px;background:#FAFAFA;border-bottom:1px solid #E0E0E0;display:flex;flex-direction:column;justify-content:space-between}
+.s-num{font-size:9.5px;font-weight:700;color:#AAA;text-transform:uppercase}
+.s-nm{font-size:12.5px;font-weight:700;color:#1A1A2E;line-height:1.3}
+.wait-badge{display:inline-block;background:#E65100;color:white;font-size:8.5px;font-weight:700;padding:1px 5px;border-radius:3px;margin-top:3px}
+.cell{padding:7px 11px;border-bottom:1px solid #E8E8E8;overflow:hidden;font-size:11.5px;line-height:1.4}
+.c-ac{height:58px;background:#FFFDE7;display:flex;flex-wrap:wrap;gap:3px;align-content:center}
+.c-md{height:42px;background:#FAFAFA;display:flex;align-items:center;gap:6px}
+.md-em{font-size:19px}
+.md-lb{font-size:10.5px;color:#666}
+.c-pr{height:98px;background:white;font-size:11.5px;color:#333;overflow-y:auto}
+.c-pa{height:78px;background:#FFF5F5;overflow-y:auto}
+.pi{font-size:11px;color:#C62828;padding:1px 0}
+.pi::before{content:"• "}
+.c-sy{height:48px;background:#F5F0FF;display:flex;flex-wrap:wrap;gap:3px;align-content:center}
+.c-ar{height:48px;background:#EBF5FF;display:flex;flex-wrap:wrap;gap:3px;align-content:center}
+.sy-chip{padding:2px 6px;border-radius:3px;font-size:10px;font-weight:600;color:white}
+.ar-chip{padding:2px 6px;border-radius:3px;font-size:10px;font-weight:500;background:#DBEAFE;color:#1565C0;border:1px solid #BFDBFE}
+.c-tm{height:42px;background:#FAFAFA;display:flex;align-items:center;gap:10px;font-size:11px;color:#555}
+.t-pr{color:#333;font-weight:500}
+.t-wt{color:#E65100;font-weight:500}
+.c-as{height:68px;background:#E8F5E9;font-size:11px;color:#1B5E20;overflow-y:auto;padding:7px 11px}
+.c-or{height:68px;background:#E3F2FD;font-size:11px;color:#0D47A1;overflow-y:auto;padding:7px 11px}
+.c-au{height:68px;background:#F3E5F5;font-size:11px;color:#4A148C;overflow-y:auto;padding:7px 11px}
+.na{opacity:.45;font-style:italic}
+.c-me{height:48px;background:#FAFAFA;display:flex;flex-wrap:wrap;gap:3px;align-content:center}
+.me-chip{padding:2px 6px;border-radius:3px;font-size:10px;background:#ECEFF1;color:#37474F}
+.c-ri{height:48px;background:#FFF5F5;overflow-y:auto;padding:7px 11px}
+.ri{font-size:11px;color:#B71C1C}
+.ri::before{content:"⚠ "}
+#summary{margin:0 40px 40px;background:white;border-radius:8px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+#summary h2{font-size:15px;margin-bottom:14px;color:#1A1A2E}
+.sum-t{width:100%;border-collapse:collapse;font-size:12px}
+.sum-t th{text-align:left;padding:7px 12px;background:#F8F9FA;font-size:10px;text-transform:uppercase;color:#777;letter-spacing:.05em}
+.sum-t td{padding:7px 12px;border-bottom:1px solid #F0F0F0;vertical-align:top}
+</style>
+</head>
+<body>
+<div id="page-header">
+  <h1 id="main-title"></h1>
+  <div class="sub" id="main-sub"></div>
+</div>
+<div id="legend"></div>
+<div id="bp-wrap"><div id="bp">
+  <div class="labels" id="labels"></div>
+  <div class="steps-area" id="steps-area"></div>
+</div></div>
+<div id="summary"></div>
+
+<script>
+var TITLE = "BLUEPRINT: TIKTOK — ENTERPRISE SALES & ONBOARDING";
+var SUBTITLE = "Ciclo comercial com grandes anunciantes | Análise Taqtile 2026";
+
+var PHASES = [
+  {id:"f1", name:"FASE 1 — PROSPECÇÃO & QUALIFICAÇÃO", color:"#37474F"},
+  {id:"f2", name:"FASE 2 — DISCOVERY & DIAGNÓSTICO", color:"#00695C"},
+  {id:"f3", name:"FASE 3 — PROPOSTA ESTRATÉGICA", color:"#1565C0"},
+  {id:"f4", name:"FASE 4 — ONBOARDING TÉCNICO", color:"#E65100"},
+  {id:"f5", name:"FASE 5 — LANÇAMENTO", color:"#6A1B9A"},
+  {id:"f6", name:"FASE 6 — OTIMIZAÇÃO", color:"#B71C1C"},
+  {id:"f7", name:"FASE 7 — BUSINESS REVIEW & RENOVAÇÃO", color:"#2E7D32"}
+];
+
+var ACTOR_COLORS = {
+  "AM":"#1565C0",
+  "Agency":"#5D4037",
+  "Client":"#37474F",
+  "Analytics":"#00695C",
+  "CreativeTeam":"#AD1457",
+  "TechSolutions":"#4527A0",
+  "Legal":"#BF360C"
+};
+
+var SYS_COLORS = {
+  "Salesforce":"#0176D3",
+  "LinkedIn":"#0A66C2",
+  "Ads Manager":"#010101",
+  "Business Center":"#FE2C55",
+  "Creative Center":"#25F4EE",
+  "Events Manager":"#7B1FA2",
+  "Google Tag Manager":"#4285F4",
+  "Frame.io":"#595CFF",
+  "DocuSign":"#FFBA00",
+  "Looker Studio":"#4285F4",
+  "Notion":"#333333",
+  "Zoom":"#2D8CFF",
+  "Slack":"#4A154B"
+};
+
+var STEPS = [
+  // FASE 1
+  {p:0, n:"1.1", nm:"Identificação e Priorização da Conta", isWait:false,
+   actors:["AM","Agency"],
+   mood:3,
+   process:"O AM identifica contas de alto potencial via Salesforce e sinais externos: presença orgânica forte, crescimento de budget digital, lançamentos de produto. Prioriza via scorecard interno cruzando vertical, budget histórico e oportunidade competitiva.",
+   pains:["Sinais de intenção dispersos em múltiplas fontes","Scoring manual sem base em dados comportamentais","Difícil distinguir conta genuinamente pronta de conta curiosa"],
+   systems:["Salesforce","LinkedIn"],
+   artifacts:["Shortlist de contas qualificadas","Scorecard de priorização"],
+   processTime:"2–4h", waitTime:"0",
+   assist:"IA cruza presença orgânica no TikTok, histórico de gastos e sinais de crescimento para sugerir score de prioridade por conta.",
+   orchestration:"IA gera briefing consolidado de conta (setor, concorrentes, gastos estimados, melhores conteúdos orgânicos) para o AM revisar antes do primeiro contato.",
+   automation:"IA monitora contas-alvo e dispara alerta quando detecta sinal de intenção: novo produto lançado, concorrente aumentando investimento, campanha nova no ar.",
+   metrics:["Contas qualificadas/semana","Conversão qualificação → discovery"],
+   risks:["Scorecard desatualizado","Foco em contas grandes demais vs. contas com maior propensão"]},
+
+  {p:0, n:"1.2", nm:"Mapeamento de Stakeholders", isWait:false,
+   actors:["AM"],
+   mood:2,
+   process:"AM pesquisa manualmente no LinkedIn e no histórico da conta os decisores de marketing, mídia e tecnologia. Identifica campeões potenciais, influenciadores internos e possíveis bloqueadores.",
+   pains:["Processo 100% manual","Orgchart muda frequentemente","Difícil identificar real decisor de verba digital vs. usuário da plataforma"],
+   systems:["LinkedIn","Salesforce"],
+   artifacts:["Mapa de stakeholders","Personas de acesso"],
+   processTime:"1–3h", waitTime:"0",
+   assist:"IA sugere lista de stakeholders relevantes com base em cargo, departamento e histórico de engajamento com posts de plataformas de mídia.",
+   orchestration:"IA gera mapa de stakeholders com papéis (decisor, influenciador, usuário, bloqueador) e sugere estratégia de abordagem por perfil.",
+   automation:"—",
+   metrics:["Stakeholders mapeados/conta","Pontos de contato identificados"],
+   risks:["Mapeamento incompleto","Acesso ao decisor bloqueado por gatekeeper"]},
+
+  {p:0, n:"1.3", nm:"Qualificação de Conta", isWait:false,
+   actors:["AM","Agency"],
+   mood:3,
+   process:"AM valida critérios de qualificação: budget disponível para pacote enterprise, objetivos de negócio compatíveis com TikTok, presença orgânica mínima na plataforma e fit com verticais prioritárias. Consulta agency se a conta já tem relacionamento.",
+   pains:["Critérios de qualificação nem sempre claros","Conta pode ter budget mas objetivo incompatível","Sem intent score consolidado"],
+   systems:["Salesforce","Ads Manager","Business Center"],
+   artifacts:["Ficha de qualificação","Recomendação go/no-go"],
+   processTime:"1–2h", waitTime:"0",
+   assist:"IA analisa histórico de gastos e performance orgânica para recomendar tier de pacote adequado ao perfil da conta.",
+   orchestration:"IA cria ficha de qualificação consolidada com dados de perfil, presença orgânica e benchmark do setor.",
+   automation:"—",
+   metrics:["Taxa de qualificação","Time to qualify por vertical"],
+   risks:["Qualificar conta errada (desperdiça ciclo)","Desqualificar cedo demais"]},
+
+  {p:0, n:"1.4", nm:"Primeiro Contato", isWait:true,
+   actors:["AM","Agency"],
+   mood:3,
+   process:"AM faz primeiro contato via e-mail personalizado ou via agency parceira. Pitch inicial usa insight específico da conta: oportunidade orgânica detectada, benchmark competitivo ou tendência de setor. Propõe call de discovery de 30 min.",
+   pains:["Taxas de resposta baixas em abordagens genéricas","Pitch desconectado das prioridades do cliente","Concorrência de outras plataformas disputando atenção do mesmo decisor"],
+   systems:["Salesforce","LinkedIn"],
+   artifacts:["E-mail de abertura","LinkedIn message","Follow-up note"],
+   processTime:"30min", waitTime:"2–5 dias úteis",
+   assist:"IA sugere personalização do pitch com base no contexto da conta: produto recém-lançado, campanha ativa de concorrente, tendência orgânica no setor.",
+   orchestration:"IA gera sequência de outbound (e-mail + LinkedIn + follow-up) com variações por perfil de stakeholder para o AM revisar e enviar.",
+   automation:"IA dispara follow-up automático após X dias sem resposta, adaptando tom conforme histórico de interação.",
+   metrics:["Taxa de resposta","Conversão para call de discovery"],
+   risks:["Abordagem genérica","Timing ruim","Contato com pessoa errada"]},
+
+  // FASE 2
+  {p:1, n:"2.1", nm:"Reunião de Discovery", isWait:false,
+   actors:["AM","Client","Agency"],
+   mood:4,
+   process:"Call de 45–60 min onde AM conduz questionário estruturado: objetivos de negócio, desafios atuais, histórico de mídia, KPIs prioritários e perfil de audiência. Agency participa se já tiver relacionamento com a conta.",
+   pains:["Clientes com objetivos vagos ('quero awareness')","Difícil qualificar expectativas de ROI no primeiro contato","Reunião vira monólogo do AM em vez de discovery real"],
+   systems:["Zoom","Salesforce","Notion"],
+   artifacts:["Notas de discovery","Lista de objetivos","Perguntas de aprofundamento"],
+   processTime:"1h", waitTime:"0",
+   assist:"IA transcreve e resume o call de discovery, destacando objetivos declarados, objeções e próximos passos para o AM revisar.",
+   orchestration:"IA processa transcrição e gera briefing estruturado com gaps identificados e perguntas de follow-up sugeridas.",
+   automation:"—",
+   metrics:["Completude do briefing","% de reuniões que avançam para diagnóstico"],
+   risks:["Discovery superficial leva a proposta desalinhada","Cliente pouco engajado sinaliza baixo comprometimento"]},
+
+  {p:1, n:"2.2", nm:"Análise de Presença Orgânica", isWait:false,
+   actors:["AM","Analytics"],
+   mood:3,
+   process:"AM e Analytics analisam o perfil orgânico do cliente no TikTok: engajamento, conteúdos de maior performance, frequência de posts e comentários da audiência. Identifica tendências do setor para contextualizar a análise.",
+   pains:["Conta pode ter pouca ou nenhuma presença orgânica","Difícil conectar performance orgânica à intenção de mídia paga","Benchmarks por vertical nem sempre acessíveis"],
+   systems:["Creative Center","Ads Manager"],
+   artifacts:["Relatório de presença orgânica","Benchmark setorial"],
+   processTime:"2–4h", waitTime:"0",
+   assist:"IA analisa comentários e vídeos do perfil do cliente para identificar temas de maior engajamento e oportunidades de conteúdo.",
+   orchestration:"IA gera relatório de presença orgânica com benchmarks do setor e recomendações iniciais de estratégia.",
+   automation:"—",
+   metrics:["Score de presença orgânica","Engajamento médio por post"],
+   risks:["Cliente sem presença orgânica (impacta Spark Ads)","Análise desatualizada"]},
+
+  {p:1, n:"2.3", nm:"Benchmarking Competitivo", isWait:false,
+   actors:["AM","Analytics","Agency"],
+   mood:3,
+   process:"Analisa investimento e estratégia dos principais concorrentes do cliente no TikTok. Identifica gaps de posicionamento, formatos em uso e tendências criativas no setor.",
+   pains:["Dados de investimento de concorrentes são estimativas","Difícil distinguir paid de orgânico boosted","Pressão do cliente por comparações precisas"],
+   systems:["Creative Center","Ads Manager"],
+   artifacts:["Relatório de benchmarking","Mapa de posicionamento competitivo"],
+   processTime:"3–6h", waitTime:"0",
+   assist:"IA monitora criativos e frequência de ads de concorrentes e sugere insights de posicionamento para usar na proposta.",
+   orchestration:"IA gera relatório de benchmarking com análise de concorrentes, gaps e oportunidades para a vertical do cliente.",
+   automation:"IA atualiza benchmarking competitivo em tempo real via monitoramento contínuo.",
+   metrics:["Conteúdos analisados","Share of voice estimado","Formatos dominantes no setor"],
+   risks:["Dados de concorrentes imprecisos","Benchmark não granular o suficiente para gerar insight acionável"]},
+
+  {p:1, n:"2.4", nm:"Alinhamento de Objetivos e KPIs", isWait:true,
+   actors:["AM","Client","Agency"],
+   mood:4,
+   process:"Com base no discovery e análises, AM apresenta diagnóstico ao cliente e alinha objetivos realistas e KPIs mensuráveis. Define hierarquia de métricas (primária/secundária) e expectativas de prazo para resultado.",
+   pains:["Cliente com expectativas de ROI desalinhadas","Pressão por resultado imediato vs. construção de marca","Dificuldade em definir KPI primário entre múltiplos objetivos"],
+   systems:["Zoom","Notion","Salesforce"],
+   artifacts:["Documento de objetivos e KPIs","Expectativas documentadas"],
+   processTime:"1h", waitTime:"1–2 dias",
+   assist:"IA sugere KPIs realistas baseados em benchmarks do setor e histórico de contas similares.",
+   orchestration:"IA gera documento de alinhamento com KPIs sugeridos, benchmarks de referência e framework de medição.",
+   automation:"—",
+   metrics:["Objetivos documentados vs. vagos","Score de alinhamento de expectativas"],
+   risks:["Objetivos mal definidos contaminam toda a proposta","Cliente sem poder de decisão sobre KPIs"]},
+
+  // FASE 3
+  {p:2, n:"3.1", nm:"Desenvolvimento de Media Plan", isWait:false,
+   actors:["AM","Analytics","Agency"],
+   mood:3,
+   process:"AM e Analytics desenvolvem media plan completo: mix de formatos (In-Feed, TopView, Branded Hashtag Challenge, Spark Ads), distribuição de budget por fase, projeções de alcance e frequência, e recomendação de timing com base em sazonalidade.",
+   pains:["Calibração de budget sem histórico da conta","Projeções de alcance variáveis","Difícil recomendar mix sem criativos disponíveis"],
+   systems:["Ads Manager","Salesforce"],
+   artifacts:["Media plan","Projeções de performance","Recomendação de mix de formatos"],
+   processTime:"4–8h", waitTime:"0",
+   assist:"IA sugere mix de formatos e distribuição de budget com base nos objetivos do cliente e benchmarks da vertical.",
+   orchestration:"IA gera media plan completo com projeções de alcance, frequência e custo por resultado para o AM revisar e ajustar.",
+   automation:"IA recalcula projeções automaticamente quando o budget-alvo é alterado.",
+   metrics:["Budget proposto","CPM estimado por formato","Projeção de alcance"],
+   risks:["Projeções otimistas criam expectativa irrealista","Mix inadequado para o objetivo"]},
+
+  {p:2, n:"3.2", nm:"Criação de Proposta Comercial", isWait:true,
+   actors:["AM","Legal","Analytics"],
+   mood:3,
+   process:"AM monta proposta comercial: contexto do cliente, diagnóstico, estratégia recomendada, media plan, pacote comercial e condições. Legal valida termos conforme políticas de dados e compliance local.",
+   pains:["Processo manual e demorado","Versões múltiplas para um mesmo cliente","Aprovação legal pode atrasar o ciclo"],
+   systems:["Notion","Salesforce","DocuSign"],
+   artifacts:["Proposta comercial","Deck de apresentação","Contrato (draft)"],
+   processTime:"1–2 dias", waitTime:"1–2 dias (aprovação legal)",
+   assist:"IA sugere mensagens-chave e argumentos comerciais baseados no diagnóstico e nos objetivos do cliente.",
+   orchestration:"IA gera draft da proposta com seções pré-preenchidas a partir do briefing de discovery para o AM personalizar.",
+   automation:"—",
+   metrics:["Tempo de elaboração","Número de revisões internas"],
+   risks:["Proposta genérica sem personalização","Atraso na aprovação legal"]},
+
+  {p:2, n:"3.3", nm:"Apresentação da Proposta", isWait:true,
+   actors:["AM","Client","Agency","Analytics"],
+   mood:4,
+   process:"AM apresenta proposta ao cliente em reunião formal. Conduz storytelling do problema ao diagnóstico à solução. Analytics disponível para perguntas técnicas. Agency participa se fizer parte do processo de decisão.",
+   pains:["Comitê de compra maior do que esperado","Objeções técnicas que o AM não consegue responder sozinho","Tempo insuficiente para cobrir toda a proposta"],
+   systems:["Zoom","Salesforce"],
+   artifacts:["Deck apresentado","Ata de reunião","Registro de objeções"],
+   processTime:"1–2h", waitTime:"2–5 dias (decisão)",
+   assist:"IA prepara banco de objeções e respostas sugeridas baseado no perfil do cliente e objeções mais comuns do setor.",
+   orchestration:"IA analisa gravação da reunião e identifica objeções, dúvidas não respondidas e nível de engajamento dos stakeholders.",
+   automation:"—",
+   metrics:["Engajamento na reunião","Objeções levantadas","NPS da apresentação"],
+   risks:["Stakeholder decisivo ausente","Proposta apresentada a quem não tem autonomia de budget"]},
+
+  {p:2, n:"3.4", nm:"Negociação e Fechamento", isWait:true,
+   actors:["AM","Client","Legal","Agency"],
+   mood:3,
+   process:"AM conduz negociação de condições: budget, pacote de formatos, bônus de performance e prazo de veiculação. Legal finaliza contrato. Acordo assinado via DocuSign.",
+   pains:["Múltiplos ciclos de revisão","Cliente testa limites de flexibilidade","Legal lento para aprovar termos customizados"],
+   systems:["Salesforce","DocuSign"],
+   artifacts:["Contrato assinado","Order de inserção","Confirmação de kickoff"],
+   processTime:"1–3h (reuniões)", waitTime:"3–7 dias",
+   assist:"IA sugere estratégia de concessão baseada no histórico de negociação do cliente e padrões do setor.",
+   orchestration:"—",
+   automation:"IA monitora status de assinatura e dispara lembretes automáticos para signatários pendentes.",
+   metrics:["Taxa de fechamento","Tempo de negociação","Budget fechado vs. proposto"],
+   risks:["Perda para concorrente na reta final","Negociação que compromete margem sem contrapartida"]},
+
+  // FASE 4
+  {p:3, n:"4.1", nm:"Setup do Business Center", isWait:true,
+   actors:["AM","TechSolutions","Client"],
+   mood:2,
+   process:"TechSolutions guia o cliente na criação/configuração do Business Center: vinculação de contas de anúncio, permissões de acesso, métodos de pagamento e perfis de usuário. Frequentemente inclui agência como administradora delegada.",
+   pains:["Cliente sem familiaridade com a interface","Erros de permissão causam bloqueios","Agência e cliente disputando controle de conta"],
+   systems:["Business Center","Ads Manager"],
+   artifacts:["Business Center configurado","Permissões documentadas","Credenciais de acesso"],
+   processTime:"1–3h", waitTime:"1–2 dias",
+   assist:"IA guia o cliente passo a passo na configuração com checklist interativo e detecção de erros em tempo real.",
+   orchestration:"IA valida configuração completa e gera relatório de gaps para TechSolutions resolver antes de avançar.",
+   automation:"IA configura permissões padrão automaticamente com base no perfil da conta (brand direto vs. agência administradora).",
+   metrics:["Tempo de setup","Taxa de erros de configuração","Itens incompletos no checklist"],
+   risks:["Erro de permissão bloqueia acesso no dia do lançamento","Agência e cliente com acesso conflitante"]},
+
+  {p:3, n:"4.2", nm:"Pixel e Mapeamento de Eventos", isWait:true,
+   actors:["TechSolutions","Client","Agency"],
+   mood:2,
+   process:"TechSolutions instala e valida o TikTok Pixel no site do cliente. Mapeia eventos críticos (PageView, AddToCart, Purchase, Lead). Valida via Events Manager. Cliente ou agência implementa via GTM ou diretamente no código.",
+   pains:["Implementação atrasada por dependência da TI do cliente","Eventos mal mapeados geram dados incorretos de otimização","Tags conflitantes no GTM causam falhas"],
+   systems:["Events Manager","Google Tag Manager","Ads Manager"],
+   artifacts:["Pixel instalado","Mapeamento de eventos","Relatório de validação"],
+   processTime:"2–4h", waitTime:"3–7 dias (dependência TI)",
+   assist:"IA diagnostica eventos mal configurados e sugere correções específicas para a equipe técnica do cliente.",
+   orchestration:"IA gera plano de implementação de pixel com eventos priorizados por objetivo de campanha e valida a instalação via simulação.",
+   automation:"IA monitora saúde do pixel em tempo real e alerta AM e TechSolutions quando detecta queda ou inconsistência de eventos.",
+   metrics:["Taxa de eventos válidos","Lag de implementação","Cobertura de eventos mapeados"],
+   risks:["Pixel não validado no dia do lançamento","Eventos duplicados inflam métricas"]},
+
+  {p:3, n:"4.3", nm:"Brand Safety & Exclusões", isWait:true,
+   actors:["AM","TechSolutions","Client","Legal"],
+   mood:3,
+   process:"TechSolutions e AM configuram parâmetros de brand safety: listas de exclusão de conteúdo, keywords negativas, categorias vetadas. Legal valida alinhamento com a política da marca. Cliente aprova configuração final.",
+   pains:["Critérios de brand safety excessivamente restritivos limitam alcance","Difícil balancear segurança e escala","Listas de exclusão desatualizadas"],
+   systems:["Ads Manager","Business Center"],
+   artifacts:["Configuração de brand safety","Lista de exclusões aprovada","Documentação de política"],
+   processTime:"1–2h", waitTime:"1–3 dias (aprovação legal)",
+   assist:"IA sugere configuração de brand safety com base no setor do cliente e em incidentes históricos na plataforma.",
+   orchestration:"IA gera relatório de impacto da configuração no alcance estimado e sugere ajustes para balancear segurança e escala.",
+   automation:"IA monitora em tempo real e bloqueia automaticamente inventário fora dos parâmetros definidos.",
+   metrics:["% de inventário disponível após configuração","Incidentes de brand safety"],
+   risks:["Configuração muito restritiva reduz alcance drasticamente","Incidente de brand safety pós-lançamento"]},
+
+  {p:3, n:"4.4", nm:"Briefing e Produção Criativa", isWait:true,
+   actors:["AM","CreativeTeam","Client","Agency"],
+   mood:3,
+   process:"AM e CreativeTeam conduzem briefing criativo: formatos, mensagens-chave, estética nativa do TikTok, diretrizes de marca e CTAs. CreativeTeam produz variações ou guia agência/cliente na produção.",
+   pains:["Clientes trazem criativos adaptados de outras plataformas","Briefing sem referências suficientes","Ciclos longos de aprovação criativa"],
+   systems:["Creative Center","Frame.io"],
+   artifacts:["Briefing criativo","Referências de creative","Variações de criativos"],
+   processTime:"1–2 dias (briefing + produção)", waitTime:"2–5 dias (aprovação)",
+   assist:"IA analisa top criativos do setor no TikTok e sugere referências e elementos de creative para o briefing.",
+   orchestration:"IA gera briefing criativo estruturado com referências, diretrizes de formato e sugestões de hooks.",
+   automation:"—",
+   metrics:["Variações produzidas","Tempo de produção","Taxa de aprovação no 1º review"],
+   risks:["Criativo não nativo ao TikTok (queda de performance)","Ciclo de aprovação atrasa lançamento"]},
+
+  {p:3, n:"4.5", nm:"Revisão e Aprovação Final", isWait:true,
+   actors:["AM","Client","Legal","CreativeTeam"],
+   mood:2,
+   process:"Cliente revisa criativos e solicita ajustes. Legal do cliente valida compliance (especialmente em setores regulados: fintech, saúde, álcool). AM garante alinhamento com políticas do TikTok. Criativos aprovados carregados no Ads Manager.",
+   pains:["Ciclos de revisão longos e desestruturados","Feedback fragmentado por e-mail","Legal do cliente adiciona restrições que comprometem o criativo nativo"],
+   systems:["Frame.io","Ads Manager"],
+   artifacts:["Criativos aprovados","Registro de versões","Criativos carregados no Ads Manager"],
+   processTime:"2–4h (revisão)", waitTime:"3–10 dias",
+   assist:"IA identifica elementos no criativo que violam políticas do TikTok e sugere ajustes antes do review do cliente.",
+   orchestration:"IA consolida feedback de múltiplos revisores, identifica conflitos e gera lista unificada de ajustes para o CreativeTeam.",
+   automation:"IA verifica automaticamente criativos contra políticas do TikTok e retorna relatório de compliance antes de enviar ao cliente.",
+   metrics:["Rounds de revisão","Tempo de aprovação","Taxa de reprovação por política"],
+   risks:["Criativo reprovado no dia do lançamento","Feedback conflitante entre stakeholders do cliente"]},
+
+  // FASE 5
+  {p:4, n:"5.1", nm:"QA Pré-Lançamento", isWait:false,
+   actors:["AM","TechSolutions","Analytics"],
+   mood:3,
+   process:"Checklist completo antes do go live: pixel validado, eventos disparando corretamente, criativos carregados, targeting revisado, budget e datas corretos, URLs de destino funcionando, UTMs configurados.",
+   pains:["Checklist manual sujeito a erro humano","Pressão de deadline leva a pular etapas","Dependência de múltiplos times para validar cada item"],
+   systems:["Ads Manager","Events Manager","Google Tag Manager"],
+   artifacts:["Checklist de QA completo","Relatório de pré-lançamento","Aprovação para go live"],
+   processTime:"2–4h", waitTime:"0",
+   assist:"IA executa checklist de QA automaticamente e gera relatório com status de cada item e pendências críticas.",
+   orchestration:"IA coordena validação paralela de pixel, criativos e targeting e consolida resultado em relatório unificado de prontidão.",
+   automation:"IA executa QA automático e bloqueia lançamento se itens críticos estiverem pendentes.",
+   metrics:["Itens validados no QA","Tempo de QA","Blockers encontrados"],
+   risks:["Pixel não disparando no lançamento","URL com erro","Budget incorreto configurado"]},
+
+  {p:4, n:"5.2", nm:"Go Live da Campanha", isWait:true,
+   actors:["AM","TechSolutions","Client"],
+   mood:4,
+   process:"Campanha ativada no Ads Manager. AM confirma go live ao cliente e envia notificação. TechSolutions monitora primeiros disparos de pixel. AM e cliente ficam em contato próximo nas primeiras horas.",
+   pains:["Aprovação pelo TikTok pode demorar","Impressões iniciais baixas por fase de aprendizado do algoritmo","Cliente ansioso por resultados imediatos"],
+   systems:["Ads Manager","Events Manager","Slack"],
+   artifacts:["Confirmação de ativação","Notificação ao cliente","Monitoramento inicial"],
+   processTime:"30min–1h", waitTime:"0–24h (aprovação TikTok)",
+   assist:"IA notifica o AM sobre status de aprovação dos anúncios e sinaliza qualquer rejeição com motivo detalhado.",
+   orchestration:"—",
+   automation:"IA monitora aprovação dos anúncios e reativa automaticamente se houver expiração de status.",
+   metrics:["Tempo de aprovação TikTok","Impressões nas primeiras 6h","CPM inicial"],
+   risks:["Reprovação de criativo no go live","Fase de aprendizado com CPA alto inicial"]},
+
+  {p:4, n:"5.3", nm:"Monitoramento Early (48h)", isWait:false,
+   actors:["AM","Analytics","Client"],
+   mood:3,
+   process:"AM e Analytics monitoram performance nas primeiras 48h: impressões, CTR, CPC, eventos de pixel e frequência. Comparam com benchmarks do setor. Identificam criativos com underperformance para ajuste rápido.",
+   pains:["Dados das primeiras 24h ainda em fase de aprendizado (não representativos)","Pressão para otimizar cedo compromete o aprendizado","Cliente cobrando resultados antes do algoritmo estabilizar"],
+   systems:["Ads Manager","Looker Studio","Slack"],
+   artifacts:["Relatório de early performance","Alertas de anomalia","Recomendações de ajuste"],
+   processTime:"Contínuo 48h", waitTime:"0",
+   assist:"IA compara performance das primeiras 48h com benchmarks históricos de contas similares e sinaliza desvios relevantes.",
+   orchestration:"IA gera relatório automático de early performance com diagnóstico e recomendações de ajuste para o AM validar.",
+   automation:"IA ajusta automaticamente budget entre criativos com base em CTR e taxa de evento nas primeiras 48h.",
+   metrics:["CTR primeiras 48h","CPA inicial vs. meta","Taxa de pixel válido","Frequência"],
+   risks:["Otimização prematura durante fase de aprendizado","Problema técnico não detectado no QA"]},
+
+  {p:4, n:"5.4", nm:"Primeiro Relatório de Performance", isWait:true,
+   actors:["AM","Analytics","Client"],
+   mood:4,
+   process:"Após primeira semana, AM e Analytics preparam relatório completo: resultados vs. KPIs, análise de criativos, audiências de maior performance e primeiros insights de otimização. Apresentado em call ou enviado por e-mail.",
+   pains:["Dados da primeira semana ainda em aprendizado","Pressão para mostrar ROI antes do prazo natural","Relatório manual demorado de preparar"],
+   systems:["Ads Manager","Looker Studio","Zoom"],
+   artifacts:["Relatório de performance (semana 1)","Deck de apresentação","Próximos passos"],
+   processTime:"3–5h (preparação)", waitTime:"1–2 dias (reunião)",
+   assist:"IA identifica insights-chave nos dados da primeira semana e sugere narrativa de relatório para o AM usar com o cliente.",
+   orchestration:"IA gera relatório completo com análise automática de criativos, audiências e recomendações de otimização.",
+   automation:"IA envia relatório automático de performance semanal ao cliente sem intervenção do AM.",
+   metrics:["NPS do relatório","Satisfação do cliente (semana 1)","Clareza dos insights"],
+   risks:["Relatório técnico demais para o cliente entender","Insights prematuros criam expectativa errada"]},
+
+  // FASE 6
+  {p:5, n:"6.1", nm:"Análise de Performance Semanal", isWait:false,
+   actors:["AM","Analytics"],
+   mood:3,
+   process:"Review semanal: criativos, audiências, posicionamentos, horários e dispositivos. Identifica oportunidades de otimização e prioriza ajustes por impacto esperado.",
+   pains:["Volume de dados alto para análise manual","Difícil isolar variáveis de impacto","Análise inconsistente entre diferentes AMs"],
+   systems:["Ads Manager","Looker Studio","Slack"],
+   artifacts:["Relatório semanal","Lista de otimizações priorizadas"],
+   processTime:"2–4h", waitTime:"0",
+   assist:"IA destaca as 3 principais oportunidades de otimização da semana para o AM priorizar.",
+   orchestration:"IA gera análise completa de performance com diagnóstico de criativos, audiências e posicionamentos, ordenada por impacto.",
+   automation:"IA aplica otimizações de baixo risco (bid adjustment, pause de criativos abaixo do threshold) dentro de parâmetros pré-aprovados.",
+   metrics:["Melhoria de CPA semana a semana","CTR por criativo","ROAS por audiência"],
+   risks:["Over-otimização (exit de fase de aprendizado)","Foco em métrica errada"]},
+
+  {p:5, n:"6.2", nm:"Otimização de Criativos", isWait:true,
+   actors:["AM","CreativeTeam","Client","Agency"],
+   mood:3,
+   process:"Com base na análise, AM e CreativeTeam identificam elementos de alta e baixa performance. Desenvolvem novas iterações com base em learnings. Cliente aprova novos criativos. Ciclo contínuo de teste e iteração.",
+   pains:["Ciclo de produção lento para a velocidade do TikTok","Cliente reluta em mudar criativos que 'parecem bons' mas performam mal","Fadiga criativa não detectada cedo o suficiente"],
+   systems:["Creative Center","Frame.io","Ads Manager"],
+   artifacts:["Novos criativos","Learnings de creative","Relatório de creative performance"],
+   processTime:"1–3 dias (produção)", waitTime:"2–5 dias (aprovação)",
+   assist:"IA analisa atributos de criativos de alta performance (hook, duração, elementos visuais) e sugere guidelines para próxima iteração.",
+   orchestration:"IA gera brief criativo para nova rodada baseado em learnings de performance, aprovado pelo AM antes de ir à produção.",
+   automation:"IA detecta fadiga criativa e solicita nova rodada quando CTR cai abaixo do threshold por 3 dias consecutivos.",
+   metrics:["Creative refresh rate","Performance de novos criativos vs. anteriores","Tempo do ciclo criativo"],
+   risks:["Criativo muito derivado dos anteriores não testa hipótese nova","Produção lenta cria gap entre análise e ação"]},
+
+  {p:5, n:"6.3", nm:"Escala de Budget e Audiências", isWait:false,
+   actors:["AM","Analytics","Client"],
+   mood:4,
+   process:"Com criativos e audiências validados, AM recomenda e implementa escala de budget. Expande para audiências lookalike, novas segmentações ou novos formatos. Avalia impacto da escala nos KPIs.",
+   pains:["Escala rápida pode sair da fase de aprendizado e aumentar CPA","Cliente quer escalar antes da validação","Difícil prever impacto de escala em plataforma de leilão"],
+   systems:["Ads Manager","Looker Studio"],
+   artifacts:["Plano de escala","Novas audiências configuradas","Budget ajustado"],
+   processTime:"1–2h", waitTime:"0",
+   assist:"IA sugere ritmo de escala de budget baseado em curva histórica de CPA de contas similares.",
+   orchestration:"IA gera plano de escala escalonado com projeções de impacto em CPA e alcance.",
+   automation:"IA aplica regras automáticas de escala quando ROAS está acima do target por X dias consecutivos.",
+   metrics:["CPA com escala vs. sem escala","Alcance incremental","ROAS pós-escala"],
+   risks:["Escala prematura aumenta CPA","Fragmentação de audiência reduz aprendizado"]},
+
+  {p:5, n:"6.4", nm:"Testes A/B e Novos Formatos", isWait:true,
+   actors:["AM","Analytics","CreativeTeam","Client"],
+   mood:3,
+   process:"AM e Analytics propõem testes A/B estruturados: variações de criativo, audiência, bid strategy ou formato. Implementam com grupo de controle. Analisam resultados com significância estatística. Implementam winner e documentam learnings.",
+   pains:["Volume insuficiente para testes com significância estatística","Cliente impaciente com testes que 'não convertem'","AMs pulam testes por pressão de performance imediata"],
+   systems:["Ads Manager","Analytics","Notion"],
+   artifacts:["Estrutura de teste A/B","Resultados de teste","Learnings documentados"],
+   processTime:"Setup: 1–2h", waitTime:"7–14 dias (coleta de dados)",
+   assist:"IA sugere hipóteses de teste baseadas em padrões de performance da conta e benchmarks do setor.",
+   orchestration:"IA estrutura o plano de teste A/B com configuração, métricas de sucesso e critérios de significância.",
+   automation:"IA detecta winner automaticamente quando significância estatística é atingida e pausa o variant perdedor.",
+   metrics:["Testes com resultado significativo","Lift de performance por teste","Learnings documentados"],
+   risks:["Teste sem volume mínimo invalida resultados","Confirmação de viés: interromper teste cedo quando variante preferida está na frente"]},
+
+  // FASE 7
+  {p:6, n:"7.1", nm:"QBR — Quarterly Business Review", isWait:false,
+   actors:["AM","Analytics","Client","Agency"],
+   mood:4,
+   process:"Reunião trimestral estratégica com os principais stakeholders do cliente. Revisão completa de performance: resultados vs. OKRs, ROI, principais learnings e performance comparada ao setor. Apresentação de roadmap para o próximo trimestre.",
+   pains:["Stakeholders de alto nível cobram ROI macro além dos dados da plataforma","Difícil conectar resultados de TikTok ao business do cliente (atribuição)","Reunião pode virar defesa em vez de planejamento estratégico"],
+   systems:["Looker Studio","Zoom","Salesforce"],
+   artifacts:["Deck de QBR","Business case trimestral","Roadmap próximo trimestre"],
+   processTime:"2–3h", waitTime:"0",
+   assist:"IA prepara sumário executivo da performance trimestral com benchmarks e narrativa estratégica para o AM customizar.",
+   orchestration:"IA gera deck completo de QBR com análise de performance, comparação com benchmarks e recomendações estratégicas.",
+   automation:"—",
+   metrics:["NPS do QBR","Stakeholders presentes","Alinhamento de budget para próximo trimestre"],
+   risks:["Stakeholders ausentes","Budget sob pressão por resultados abaixo do esperado","Reunião mal conduzida compromete renovação"]},
+
+  {p:6, n:"7.2", nm:"Planejamento do Próximo Ciclo", isWait:true,
+   actors:["AM","Analytics","Client","Agency"],
+   mood:4,
+   process:"Com base nos learnings do ciclo atual, AM e cliente planejam estratégia do próximo período: ajuste de KPIs, novos formatos, calendário de criativos e integração com sazonalidade e lançamentos do cliente.",
+   pains:["Cliente planeja com horizonte curto","Mudanças de estratégia de negócio invalidam planejamento","Novidades da plataforma nem sempre acessíveis com antecedência"],
+   systems:["Salesforce","Notion","Ads Manager"],
+   artifacts:["Plano estratégico próximo ciclo","Calendário de criativos","Roadmap de formatos"],
+   processTime:"1–2 dias (preparação + reunião)", waitTime:"1–2 dias (aprovação interna)",
+   assist:"IA sugere ajustes estratégicos para o próximo ciclo baseados em learnings acumulados e tendências emergentes na plataforma.",
+   orchestration:"IA gera plano estratégico com recomendações de budget, formatos e calendário criativo para o AM revisar com o cliente.",
+   automation:"—",
+   metrics:["Planejamento aprovado antes do início do ciclo","Alinhamento de budget","Calendário criativo definido"],
+   risks:["Planejamento feito sem dados suficientes do ciclo atual","Mudança de prioridades do cliente na última hora"]},
+
+  {p:6, n:"7.3", nm:"Renovação e Upsell", isWait:true,
+   actors:["AM","Client","Legal","Agency"],
+   mood:4,
+   process:"AM apresenta proposta de renovação com ajustes baseados nos learnings: novo volume de budget, pacotes adicionais (TopView, BHC), acesso a beta features. Legal finaliza contrato. AM explora upsell: novos mercados, novas linhas de produto, integração TikTok Shop.",
+   pains:["Competição renovada de outras plataformas","ROI não suficientemente claro para justificar aumento de budget","Ciclo de renovação não sinalizado com antecedência suficiente"],
+   systems:["Salesforce","DocuSign"],
+   artifacts:["Proposta de renovação","Contrato renovado","Deal de upsell"],
+   processTime:"1–2h", waitTime:"5–10 dias",
+   assist:"IA identifica oportunidades de upsell baseadas no histórico de performance e nos objetivos de negócio do cliente.",
+   orchestration:"IA gera proposta de renovação com projeções de performance para o próximo ciclo, incorporando learnings e novas oportunidades.",
+   automation:"IA monitora data de expiração de contratos e inicia automaticamente o fluxo de renovação com antecedência definida.",
+   metrics:["Taxa de renovação","Uplift de budget na renovação","Revenue de upsell"],
+   risks:["Cliente renovar com budget reduzido","Perda para concorrente na renovação","Upsell precipitado sem base de performance"]}
+];
+
+// ── RENDER ENGINE ──────────────────────────────────────────────────────────
+
+var MOODS = {1:"😫",2:"😟",3:"😐",4:"🙂",5:"😊"};
+var MOOD_LBL = {1:"Crítico",2:"Ruim",3:"Neutro",4:"Bom",5:"Ótimo"};
+var LANE_DEFS = [
+  {cls:"l-ac", lbl:"Atores"},
+  {cls:"l-md", lbl:"Humor"},
+  {cls:"l-pr", lbl:"Processo Atual"},
+  {cls:"l-pa", lbl:"Dores"},
+  {cls:"l-sy", lbl:"Sistemas"},
+  {cls:"l-ar", lbl:"Artefatos"},
+  {cls:"l-tm", lbl:"Tempo"},
+  {cls:"l-as", lbl:"IA Assistente"},
+  {cls:"l-or", lbl:"IA Orquestração"},
+  {cls:"l-au", lbl:"IA Automação"},
+  {cls:"l-me", lbl:"Métricas"},
+  {cls:"l-ri", lbl:"Riscos"}
+];
+
+function e(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function renderLabels(){
+  var h = '<div class="lbl l-ph">Fase</div><div class="lbl l-hd">Step</div>';
+  LANE_DEFS.forEach(function(l){ h += '<div class="lbl '+l.cls+'">'+l.lbl+'</div>'; });
+  document.getElementById("labels").innerHTML = h;
+}
+
+function renderLegend(){
+  var h = '<span class="lg-title">Atores</span><div class="lg-group">';
+  Object.keys(ACTOR_COLORS).forEach(function(a){
+    h += '<span class="chip" style="background:'+ACTOR_COLORS[a]+'">'+e(a)+'</span>';
+  });
+  h += '</div>&nbsp;&nbsp;<span class="lg-title">Sistemas</span><div class="lg-group">';
+  Object.keys(SYS_COLORS).forEach(function(s){
+    h += '<span class="chip" style="background:'+SYS_COLORS[s]+'">'+e(s)+'</span>';
+  });
+  h += '</div>&nbsp;&nbsp;<div class="lg-group">';
+  h += '<span class="chip" style="background:#2E7D32">IA Assistente</span>';
+  h += '<span class="chip" style="background:#1565C0">IA Orquestração</span>';
+  h += '<span class="chip" style="background:#6A1B9A">IA Automação</span>';
+  h += '</div>';
+  document.getElementById("legend").innerHTML = h;
+}
+
+function renderStep(s){
+  var wb = s.isWait ? '<span class="wait-badge">⏳ Espera</span>' : '';
+  var h = '<div class="sc'+(s.isWait?' wait':'') +'">';
+  // header
+  h += '<div class="s-hd"><div><span class="s-num">'+e(s.n)+'</span>'+wb+'</div><div class="s-nm">'+e(s.nm)+'</div></div>';
+  // actors
+  h += '<div class="cell c-ac">';
+  (s.actors||[]).forEach(function(a){
+    h += '<span class="chip" style="background:'+(ACTOR_COLORS[a]||'#616161')+'">'+e(a)+'</span>';
+  });
+  h += '</div>';
+  // mood
+  h += '<div class="cell c-md"><span class="md-em">'+(MOODS[s.mood]||"😐")+'</span><span class="md-lb">'+(MOOD_LBL[s.mood]||"Neutro")+'</span></div>';
+  // process
+  h += '<div class="cell c-pr">'+e(s.process||"—")+'</div>';
+  // pains
+  h += '<div class="cell c-pa">';
+  (s.pains||[]).forEach(function(p){ h += '<div class="pi">'+e(p)+'</div>'; });
+  h += '</div>';
+  // systems
+  h += '<div class="cell c-sy">';
+  (s.systems||[]).forEach(function(sys){
+    h += '<span class="sy-chip" style="background:'+(SYS_COLORS[sys]||'#616161')+'">'+e(sys)+'</span>';
+  });
+  h += '</div>';
+  // artifacts
+  h += '<div class="cell c-ar">';
+  (s.artifacts||[]).forEach(function(a){ h += '<span class="ar-chip">'+e(a)+'</span>'; });
+  h += '</div>';
+  // time
+  h += '<div class="cell c-tm">';
+  if(s.processTime) h += '<span class="t-pr">⏱ '+e(s.processTime)+'</span>';
+  if(s.waitTime && s.waitTime!=="0") h += '<span class="t-wt">⏳ '+e(s.waitTime)+'</span>';
+  h += '</div>';
+  // AI
+  var as=s.assist||"—", or=s.orchestration||"—", au=s.automation||"—";
+  h += '<div class="c-as">'+(as==="—"?'<span class="na">—</span>':e(as))+'</div>';
+  h += '<div class="c-or">'+(or==="—"?'<span class="na">—</span>':e(or))+'</div>';
+  h += '<div class="c-au">'+(au==="—"?'<span class="na">—</span>':e(au))+'</div>';
+  // metrics
+  h += '<div class="cell c-me">';
+  (s.metrics||[]).forEach(function(m){ h += '<span class="me-chip">'+e(m)+'</span>'; });
+  h += '</div>';
+  // risks
+  h += '<div class="cell c-ri">';
+  (s.risks||[]).forEach(function(r){ h += '<div class="ri">'+e(r)+'</div>'; });
+  h += '</div>';
+  h += '</div>';
+  return h;
+}
+
+function renderBlueprint(){
+  document.getElementById("main-title").textContent = TITLE;
+  document.getElementById("main-sub").textContent = SUBTITLE;
+  renderLabels();
+  renderLegend();
+  var sa = document.getElementById("steps-area");
+  var h = "";
+  PHASES.forEach(function(ph, pi){
+    var phSteps = STEPS.filter(function(s){ return s.p===pi; });
+    var w = phSteps.length * 268;
+    h += '<div class="phase-group" style="width:'+w+'px">';
+    h += '<div class="ph-banner" style="background:'+ph.color+'">'+e(ph.name)+'</div>';
+    h += '<div class="ph-steps">';
+    phSteps.forEach(function(s){ h += renderStep(s); });
+    h += '</div></div>';
+  });
+  sa.innerHTML = h;
+  renderSummary();
+}
+
+function renderSummary(){
+  var h = '<h2>Resumo por Fase</h2><table class="sum-t"><thead><tr>';
+  h += '<th>Fase</th><th>Steps</th><th style="color:#2E7D32">IA Assistente</th><th style="color:#1565C0">IA Orquestração</th><th style="color:#6A1B9A">IA Automação</th>';
+  h += '</tr></thead><tbody>';
+  PHASES.forEach(function(ph, pi){
+    var ps = STEPS.filter(function(s){ return s.p===pi; });
+    var as = ps.filter(function(s){ return s.assist && s.assist!=="—"; }).map(function(s){ return s.n; });
+    var or = ps.filter(function(s){ return s.orchestration && s.orchestration!=="—"; }).map(function(s){ return s.n; });
+    var au = ps.filter(function(s){ return s.automation && s.automation!=="—"; }).map(function(s){ return s.n; });
+    h += '<tr><td><strong>'+e(ph.name)+'</strong></td><td>'+ps.length+'</td>';
+    h += '<td style="color:#2E7D32">'+(as.length?as.join(", "):"—")+'</td>';
+    h += '<td style="color:#1565C0">'+(or.length?or.join(", "):"—")+'</td>';
+    h += '<td style="color:#6A1B9A">'+(au.length?au.join(", "):"—")+'</td></tr>';
+  });
+  h += '</tbody></table>';
+  document.getElementById("summary").innerHTML = h;
+}
+
+renderBlueprint();
+</script>
+</body>
+</html>
