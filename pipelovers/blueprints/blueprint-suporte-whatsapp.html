@@ -96,7 +96,6 @@ th,td{border:1px solid #E5DDDA}
   <div class="legend-item"><div class="legend-dot ldot-assist"></div>Assistente (Copiloto)</div>
   <div class="legend-item"><div class="legend-dot ldot-orq"></div>Orquestração</div>
   <div class="legend-item"><div class="legend-dot ldot-auto"></div>Automação</div>
-  <div class="legend-item"><div class="legend-dot ldot-workshop"></div>Workshop (preencher)</div>
   <div class="legend-item"><div class="legend-dot ldot-measure"></div>Medição</div>
   <div class="legend-item" style="margin-left:16px"><span class="wait-badge-legend">&#9888;&#65039; WAIT TIME</span> Gargalo de espera</div>
   <div class="legend-item" id="actor-legend" style="margin-left:16px"></div>
@@ -520,11 +519,6 @@ var LANES_BLOCK2 = [
   {id:"auto", icon:"\u26A1", label:"AUTOMAÇÃO", sub:"Agente autônomo", cls:"lane-auto"}
 ];
 
-var LANES_BLOCK3 = [
-  {id:"nivelAtual", icon:"\uD83D\uDCCA", label:"NÍVEL ATUAL", sub:"Preencher no workshop", cls:"lane-workshop"},
-  {id:"nivelAlvo", icon:"\uD83C\uDFAF", label:"NÍVEL-ALVO", sub:"Preencher no workshop", cls:"lane-workshop"}
-];
-
 var LANES_BLOCK4 = [
   {id:"metrics", icon:"\uD83D\uDCCF", label:"MÉTRICAS", sub:"Como medir", cls:"lane-metrics"},
   {id:"risks", icon:"\u26A0\uFE0F", label:"RISCOS", sub:"O que pode dar errado", cls:"lane-risks"}
@@ -589,14 +583,6 @@ html += sepRow('\u2014 COMO IA PODE AJUDAR \u2014');
 LANES_BLOCK2.forEach(function(lane){
   html += '<tr class="'+lane.cls+'"><td class="row-label '+lane.cls+'"><span class="rl-icon">'+lane.icon+'</span><span class="rl-main">'+esc(lane.label)+'</span><div class="rl-sub">'+esc(lane.sub)+'</div></td>';
   STEPS.forEach(function(s){html+='<td class="cell">';if(lane.id==='assist')html+=aiText(s.assist);else if(lane.id==='orq')html+=aiText(s.orchestration);else if(lane.id==='auto')html+=aiText(s.automation);html+='</td>';});
-  html += '</tr>';
-});
-
-html += sepRow('\u2014 DECISÃO DO TIME (PREENCHER NO WORKSHOP) \u2014');
-
-LANES_BLOCK3.forEach(function(lane){
-  html += '<tr class="'+lane.cls+'"><td class="row-label '+lane.cls+'"><span class="rl-icon">'+lane.icon+'</span><span class="rl-main">'+esc(lane.label)+'</span><div class="rl-sub">'+esc(lane.sub)+'</div></td>';
-  STEPS.forEach(function(){html+='<td class="cell" style="border-style:dashed"><div class="workshop-placeholder">Preencher no workshop</div></td>';});
   html += '</tr>';
 });
 
