@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint — PipeLovers Suporte WhatsApp | Taqtile</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Helvetica Neue",Arial,sans-serif;background:#f5f2f0;color:#1C1C1C}
+.header{padding:28px 32px 0}
+.header h1{font-size:20px;font-weight:800;color:#1C1C1C;letter-spacing:.03em}
+.header .sub{font-size:12px;color:#7F7673;margin-top:5px;letter-spacing:.01em}
+.legend{display:flex;gap:18px;padding:14px 32px 16px;align-items:center;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:#5B5654}
+.legend-dot{width:14px;height:14px;border-radius:3px}
+.ldot-current{background:#FCFAFA;border:1px solid #D5CDCA}
+.ldot-assist{background:#E8F5E9;border:1px solid #81C784}
+.ldot-orq{background:#E3F2FD;border:1px solid #64B5F6}
+.ldot-auto{background:#F3E5F5;border:1px solid #BA68C8}
+.ldot-workshop{background:#FFF8E1;border:1px dashed #FFB74D}
+.ldot-measure{background:#EFEBE9;border:1px solid #BCAAA4}
+.wait-badge-legend{display:inline-block;background:#FFEBEE;color:#C62828;padding:2px 7px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:.04em}
+.actor-sample{display:inline-block;padding:1px 7px;border-radius:3px;font-size:9px;font-weight:700;color:#fff;letter-spacing:.03em;text-transform:uppercase}
+.scroll{overflow-x:auto;margin:0 16px 32px;border:1px solid #D5CDCA;border-radius:8px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+table{border-collapse:collapse;table-layout:fixed}
+th,td{border:1px solid #E5DDDA}
+.col-label{width:130px;min-width:130px}
+.col-step{width:210px;min-width:210px}
+.phase-cell{padding:7px 12px;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#fff;text-align:center;border:none}
+.step-hdr{text-align:center;padding:10px 6px 8px;background:#1C1C1C;vertical-align:middle;border-bottom:2px solid #FF7A0D}
+.step-hdr-wait{background:#2C1A1A;border-bottom:2px solid #C62828}
+.step-dot{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:10px;font-weight:800;color:#fff;margin-bottom:4px}
+.step-name{font-size:10px;font-weight:600;color:#fff;display:block;letter-spacing:.01em;line-height:1.35}
+.wait-badge{display:inline-block;background:#FFCDD2;color:#B71C1C;padding:1px 6px;border-radius:3px;font-size:8px;font-weight:800;letter-spacing:.05em;margin-top:4px}
+.row-label{padding:8px 7px;vertical-align:middle;position:sticky;left:0;z-index:10;border-right:2px solid #D5CDCA !important;min-width:130px;width:130px}
+.rl-icon{font-size:15px;display:block;margin-bottom:2px}
+.rl-main{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;line-height:1.3}
+.rl-sub{font-size:8px;color:#9E9E9E;margin-top:1px;line-height:1.2;font-weight:400;letter-spacing:0}
+.sep-row td{background:#1C1C1C;color:#FF7A0D;font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;text-align:center;padding:6px 8px;border-color:#1C1C1C}
+.sep-row .row-label{background:#1C1C1C;color:#FF7A0D}
+.lane-actors .row-label,.lane-actors .cell{background:#FCFAFA}
+.lane-actors .rl-main{color:#5B5654}
+.lane-mood .row-label,.lane-mood .cell{background:#FFF8F3}
+.lane-mood .rl-main{color:#E65100}
+.lane-process .row-label,.lane-process .cell{background:#FCFAFA}
+.lane-process .rl-main{color:#5B5654}
+.lane-pains .row-label,.lane-pains .cell{background:#FFF5F5}
+.lane-pains .rl-main{color:#C62828}
+.lane-systems .row-label,.lane-systems .cell{background:#FCFAFA}
+.lane-systems .rl-main{color:#5B5654}
+.lane-artifacts .row-label,.lane-artifacts .cell{background:#FCFAFA}
+.lane-artifacts .rl-main{color:#5B5654}
+.lane-time .row-label,.lane-time .cell{background:#FCFAFA}
+.lane-time .rl-main{color:#5B5654}
+.lane-assist .row-label,.lane-assist .cell{background:#E8F5E9}
+.lane-assist .rl-main{color:#2E7D32}
+.lane-orq .row-label,.lane-orq .cell{background:#E3F2FD}
+.lane-orq .rl-main{color:#1565C0}
+.lane-auto .row-label,.lane-auto .cell{background:#F3E5F5}
+.lane-auto .rl-main{color:#7B1FA2}
+.lane-workshop .row-label,.lane-workshop .cell{background:#FFFDE7;border-style:dashed}
+.lane-workshop .rl-main{color:#F57F17}
+.lane-metrics .row-label,.lane-metrics .cell{background:#EFEBE9}
+.lane-metrics .rl-main{color:#5D4037}
+.lane-risks .row-label,.lane-risks .cell{background:#FFF3E0}
+.lane-risks .rl-main{color:#E65100}
+.cell{padding:7px 8px;vertical-align:top;font-size:10px;line-height:1.5;color:#2B2A29}
+.cell p{margin:0}
+.actor-tag{display:inline-block;padding:2px 7px;border-radius:3px;font-size:8px;font-weight:700;color:#fff;letter-spacing:.04em;text-transform:uppercase;margin:1px 2px}
+.sys-tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:8px;font-weight:600;letter-spacing:.02em;margin:1px 2px;border:1px solid}
+.pain-text{color:#C62828;font-size:10px;line-height:1.5}
+.pain-text li{margin-bottom:2px;margin-left:12px}
+.time-process{font-weight:600;color:#2E7D32}
+.time-wait{font-weight:700;color:#C62828;background:#FFEBEE;padding:1px 5px;border-radius:2px}
+.time-wait-critical{font-weight:700;color:#fff;background:#C62828;padding:2px 6px;border-radius:3px}
+.workshop-placeholder{color:#BDBDBD;font-style:italic;font-size:10px;text-align:center;padding:12px 4px}
+.metric-item{font-size:10px;color:#5D4037;margin-bottom:2px}
+.metric-item strong{color:#3E2723}
+.risk-text{color:#E65100;font-size:10px;line-height:1.4}
+.risk-text li{margin-bottom:2px;margin-left:12px}
+.ai-text{font-size:10px;line-height:1.5}
+.ai-empty{color:#BDBDBD;font-style:italic}
+.mood-cell{padding:0;vertical-align:middle;overflow:visible}
+@media print{body{background:#fff}.scroll{border:none;box-shadow:none;margin:0}.header{padding:16px 0 0}.legend{padding:8px 0}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1 id="bp-title"></h1>
+  <div class="sub" id="bp-subtitle"></div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot ldot-current"></div>Processo Atual</div>
+  <div class="legend-item"><div class="legend-dot ldot-assist"></div>Assistente (Copiloto)</div>
+  <div class="legend-item"><div class="legend-dot ldot-orq"></div>Orquestração</div>
+  <div class="legend-item"><div class="legend-dot ldot-auto"></div>Automação</div>
+  <div class="legend-item"><div class="legend-dot ldot-workshop"></div>Workshop (preencher)</div>
+  <div class="legend-item"><div class="legend-dot ldot-measure"></div>Medição</div>
+  <div class="legend-item" style="margin-left:16px"><span class="wait-badge-legend">&#9888;&#65039; WAIT TIME</span> Gargalo de espera</div>
+  <div class="legend-item" id="actor-legend" style="margin-left:16px"></div>
+</div>
+
+<div class="scroll"><table id="bp"></table></div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// CONFIGURAÇÃO — PIPELOVERS SUPORTE WHATSAPP
+// ════════════════════════════════════════════════════════════════
+
+var TITLE = "BLUEPRINT: PIPELOVERS — SUPORTE WHATSAPP COM AGENTE NÍVEL-0";
+var SUBTITLE = "Operação de suporte aos 5.000+ alunos · Triagem 90% acesso · 8% financeiro · 2% técnico | Taqtile 2026";
+
+var PHASES = [
+  {id:"fase1", name:"FASE 1 — CHEGADA E TRIAGEM",           color:"#78909C", count:4},
+  {id:"fase2", name:"FASE 2 — NÍVEL-0 ACESSO/LOGIN (90%)",  color:"#00695C", count:6},
+  {id:"fase3", name:"FASE 3 — ROTA FINANCEIRA (8%)",        color:"#1565C0", count:6},
+  {id:"fase4", name:"FASE 4 — ESCALONAMENTO TÉCNICO (2%)",  color:"#FF7A0D", count:5},
+  {id:"fase5", name:"FASE 5 — PÓS-ATENDIMENTO E APRENDIZADO", color:"#7B1FA2", count:5}
+];
+
+var ACTOR_COLORS = {
+  "Aluno":"#37474F",
+  "Agente Nível-0 IA":"#7B1FA2",
+  "Atendente Nível-1":"#2E7D32",
+  "Financeiro":"#5D4037",
+  "Tech":"#4527A0",
+  "Supervisor Suporte":"#1565C0",
+  "Head of Revenue":"#E65100"
+};
+
+var SYS_COLORS = {
+  "WhatsApp Business":"#25D366",
+  "LMS":"#0066CC",
+  "Gateway Pagamento":"#00843D",
+  "ERP":"#006D3A",
+  "CRM":"#FF7A59",
+  "Base de Conhecimento":"#616161",
+  "LLM":"#D97757",
+  "Ticketing":"#0052CC",
+  "Dashboards":"#F4A800",
+  "LMS (admin)":"#0066CC",
+  "LMS (dev/prod)":"#0066CC",
+  "logs":"#616161"
+};
+
+var STEPS = [
+  // ── FASE 1 — CHEGADA E TRIAGEM ──────────────────────────────────
+  {p:0, n:"1.1", nm:"Aluno inicia contato no WhatsApp", isWait:false,
+   actors:["Aluno"], mood:2,
+   process:"Aluno encontra o número da PipeLovers e envia mensagem descrevendo o problema. Não há confirmação automática fora do horário comercial.",
+   pains:["Mensagens fora do horário sem resposta","Aluno não sabe status/fila","Mesma dúvida em múltiplos canais por falta de retorno"],
+   systems:["WhatsApp Business"],
+   artifacts:["Mensagem inicial do aluno"],
+   processTime:"instantâneo", waitTime:"0-24h",
+   assist:"—",
+   orchestration:"—",
+   automation:"Resposta automática de boas-vindas com ETA + coleta inicial estruturada",
+   metrics:["Volume de mensagens/dia","% fora de horário","Mensagens duplicadas por aluno"],
+   risks:["Expectativa de resposta humana imediata gera frustração"]},
+
+  {p:0, n:"1.2", nm:"Identificação do aluno", isWait:false,
+   actors:["Agente Nível-0 IA","Aluno"], mood:3,
+   process:"Atendente pede CPF/matrícula e busca manualmente em LMS e CRM para puxar ficha. Leva 2-5 minutos.",
+   pains:["Identificação manual, risco de trocar aluno","Aluno repete dados a cada contato","Credenciais de atendentes desatualizadas"],
+   systems:["WhatsApp Business","LMS","CRM"],
+   artifacts:["Ficha do aluno (curso, status, histórico)"],
+   processTime:"2-5min", waitTime:"0",
+   assist:"IA sugere match do aluno pelo número de telefone cadastrado",
+   orchestration:"IA consolida perfil completo (curso, pagamentos, tickets, engajamento) em snapshot estruturado",
+   automation:"Identificação instantânea por telefone + contexto carregado sem intervenção",
+   metrics:["Taxa de match automático","Tempo médio até identificação"],
+   risks:["Número divergente do cadastro","Exposição de dados sensíveis (LGPD)"]},
+
+  {p:0, n:"1.3", nm:"Classificação de intenção", isWait:false,
+   actors:["Agente Nível-0 IA"], mood:2,
+   process:"Atendente lê a mensagem e classifica mentalmente em acesso/financeiro/tech. Classificação inconsistente entre atendentes.",
+   pains:["Critério varia por atendente","Fila única sem priorização","Sem visibilidade do mix 90/8/2 em tempo real"],
+   systems:["WhatsApp Business","LLM"],
+   artifacts:["Intenção + subcategoria + score de confiança"],
+   processTime:"30s-2min", waitTime:"0",
+   assist:"IA sugere categoria ao atendente durante triagem",
+   orchestration:"IA classifica e propõe rota; humano valida apenas casos ambíguos",
+   automation:"Classificação autônoma com confidence score; rota direta quando score > threshold",
+   metrics:["Acurácia de classificação","% ambiguidades","Distribuição real 90/8/2"],
+   risks:["Má classificação envia caso crítico para fluxo errado"]},
+
+  {p:0, n:"1.4", nm:"Roteamento", isWait:false,
+   actors:["Agente Nível-0 IA","Supervisor Suporte"], mood:3,
+   process:"Atendente decide próxima ação ou repassa via grupo de Slack/WhatsApp. Handoff informal, contexto se perde.",
+   pains:["Handoff manual por mensagem em grupo","Aluno transferido repete histórico","Sem ownership do atendimento"],
+   systems:["WhatsApp Business","Ticketing"],
+   artifacts:["Rota definida + ticket estruturado"],
+   processTime:"1-3min", waitTime:"0",
+   assist:"IA sugere fila e prioridade ao supervisor",
+   orchestration:"IA cria ticket estruturado com contexto completo e roteia para fila apropriada",
+   automation:"Roteamento autônomo — 90% dos casos entram direto no fluxo nível-0 sem humano",
+   metrics:["% roteadas corretamente","Tempo de roteamento","Taxa de re-roteamento"],
+   risks:["Loop entre filas","Perda de ownership entre nível-0 e nível-1"]},
+
+  // ── FASE 2 — NÍVEL-0 ACESSO/LOGIN (90%) ─────────────────────────
+  {p:1, n:"2.1", nm:"Diagnóstico de acesso", isWait:false,
+   actors:["Agente Nível-0 IA","Aluno"], mood:2,
+   process:"Atendente pergunta 'qual erro aparece?', 'de qual dispositivo?'. Diagnóstico por tentativa com muita troca de mensagens.",
+   pains:["Aluno não descreve erro técnico","Fotos borradas, screenshots cortados","Idas e voltas longas antes do problema"],
+   systems:["WhatsApp Business","LLM"],
+   artifacts:["Diagnóstico categorizado (senha, email, bloqueio, app, etc.)"],
+   processTime:"3-8min", waitTime:"0",
+   assist:"IA sugere perguntas de diagnóstico ao atendente humano",
+   orchestration:"IA conduz diagnóstico via perguntas estruturadas, chega ao root cause e propõe solução",
+   automation:"Diagnóstico 100% IA com árvore de decisão adaptativa — resolução < 1min nos casos clássicos",
+   metrics:["Acurácia de diagnóstico","Nº de trocas até diagnóstico","Taxa de desistência do aluno"],
+   risks:["Aluno desiste se fluxo for longo demais"]},
+
+  {p:1, n:"2.2", nm:"Recuperação de senha / reset", isWait:false,
+   actors:["Agente Nível-0 IA"], mood:2,
+   process:"Atendente abre o admin do LMS, localiza conta, aciona reset e reenvia link por WhatsApp. Mecânico e repetitivo.",
+   pains:["Consome atendente experiente em tarefa mecânica","Risco de reset em conta errada","Credenciais admin compartilhadas"],
+   systems:["LMS (admin)","WhatsApp Business"],
+   artifacts:["Link de reset enviado + confirmação"],
+   processTime:"2-4min", waitTime:"0",
+   assist:"IA prepara payload do reset para humano aprovar com um clique",
+   orchestration:"IA aciona reset no LMS e envia link via WhatsApp; humano acompanha via dashboard",
+   automation:"Reset ponta-a-ponta sem humano, com guardrails (últimos dígitos do telefone)",
+   metrics:["Volume de resets/dia","Taxa de sucesso no 1º envio","% automatizados"],
+   risks:["Reset em conta errada","Fraude (terceiro pedindo reset)"]},
+
+  {p:1, n:"2.3", nm:"Orientação de acesso", isWait:false,
+   actors:["Agente Nível-0 IA","Aluno"], mood:3,
+   process:"Atendente envia tutorial por texto/screenshot. Respostas variam entre atendentes; base de conhecimento nem sempre é usada.",
+   pains:["Copy-paste entre atendentes","Inconsistência nas explicações","Tutorial defasado em relação à UI"],
+   systems:["WhatsApp Business","Base de Conhecimento","LLM"],
+   artifacts:["Tutorial personalizado (web / iOS / Android) com mídia"],
+   processTime:"2-5min", waitTime:"0",
+   assist:"IA sugere artigo da base para o atendente anexar",
+   orchestration:"IA gera resposta contextualizada (curso, dispositivo, navegador); humano aprova",
+   automation:"Resposta instantânea personalizada com mídia (GIFs/prints) e follow-up",
+   metrics:["Taxa de resolução no 1º envio","Nº de interações até resolução"],
+   risks:["Tutorial desatualizado gera nova dúvida"]},
+
+  {p:1, n:"2.4", nm:"Validação da resolução", isWait:false,
+   actors:["Agente Nível-0 IA","Aluno"], mood:3,
+   process:"Atendente pergunta 'conseguiu?' e aguarda. Muitos alunos não respondem, ticket fica em estado indefinido.",
+   pains:["Silent dropout — aluno sai sem confirmar","Tickets zumbis inflam métrica aberta","Sem visibilidade se resolveu"],
+   systems:["WhatsApp Business"],
+   artifacts:["Confirmação de resolução ou reabertura"],
+   processTime:"1-2min", waitTime:"5min-2h",
+   assist:"IA redige pergunta de follow-up para o atendente enviar",
+   orchestration:"IA envia follow-up programado e reabre se aluno responder negativamente",
+   automation:"Follow-up automático em cadência (5min, 1h, 24h); fecha ticket no silêncio e dispara NPS",
+   metrics:["Taxa de confirmação explícita","% tickets zumbis","Reabertura pós-fechamento"],
+   risks:["Fechar cedo demais quando aluno ainda está tentando"]},
+
+  {p:1, n:"2.5", nm:"Escalada para nível-1", isWait:true,
+   actors:["Agente Nível-0 IA","Atendente Nível-1"], mood:2,
+   process:"Problema não resolve no nível-0 e é repassado ao nível-1 com contexto parcial via grupo. Aluno repete histórico.",
+   pains:["Handoff com contexto incompleto","Aluno repete o histórico","Tempo de espera elevado na fila"],
+   systems:["WhatsApp Business","Ticketing","CRM"],
+   artifacts:["Ticket escalado com histórico + diagnóstico tentado"],
+   processTime:"2-3min", waitTime:"10min-2h",
+   assist:"IA sugere notas de escalada para humano revisar",
+   orchestration:"IA gera resumo estruturado + próximos passos sugeridos para o nível-1",
+   automation:"Escalada automática com threshold (3 tentativas ou confidence baixa); histórico completo no nível-1",
+   metrics:["Taxa de escalada indevida","Tempo de espera no nível-1"],
+   risks:["Subir casos simples (sobrecarga)","Reter casos complexos (frustração)"]},
+
+  {p:1, n:"2.6", nm:"Registro e fechamento", isWait:false,
+   actors:["Agente Nível-0 IA"], mood:3,
+   process:"Atendente registra resolução em planilha ou CRM. Muitos tickets sem registro completo, tags inconsistentes.",
+   pains:["Dados inconsistentes entre atendentes","FCR impossível de medir","Categorização varia semana a semana"],
+   systems:["CRM","Ticketing","Base de Conhecimento"],
+   artifacts:["Ticket fechado + tag + resumo da resolução"],
+   processTime:"1-2min", waitTime:"0",
+   assist:"IA sugere tags ao atendente no fechamento",
+   orchestration:"IA gera resumo estruturado e atualiza CRM após revisão humana",
+   automation:"Registro automático ponta-a-ponta + enriquecimento da base quando detecta padrão novo",
+   metrics:["% tickets com registro completo","FCR","Distribuição real de categorias"],
+   risks:["Dados ruins = decisões ruins sobre dimensionamento"]},
+
+  // ── FASE 3 — ROTA FINANCEIRA (8%) ───────────────────────────────
+  {p:2, n:"3.1", nm:"Identificação da dúvida financeira", isWait:false,
+   actors:["Agente Nível-0 IA","Aluno"], mood:2,
+   process:"Atendente identifica o subtipo: 2ª via, status de pagamento, troca de cartão, cancelamento, inadimplência. Cada um exige rota diferente.",
+   pains:["Alta variedade de subtipos","Sem separação entre 'padrão' e 'negociação'","Dúvida simples demora tanto quanto disputa"],
+   systems:["WhatsApp Business","LLM"],
+   artifacts:["Subtipo da demanda financeira"],
+   processTime:"2-3min", waitTime:"0",
+   assist:"IA sugere subcategoria ao atendente",
+   orchestration:"IA classifica subtipo e carrega dados do aluno no ERP/gateway",
+   automation:"Classificação + carregamento instantâneo; rota padrão vs. escalada decidida autonomamente",
+   metrics:["Distribuição por subtipo","Acurácia da classificação"],
+   risks:["Confundir dúvida simples com reclamação crítica (inadimplência em disputa)"]},
+
+  {p:2, n:"3.2", nm:"Consulta a sistemas financeiros", isWait:false,
+   actors:["Agente Nível-0 IA"], mood:2,
+   process:"Atendente abre gateway, ERP e LMS, busca por CPF, consulta status. Multi-sistema, lento.",
+   pains:["Troca de abas e credenciais","Dados dispersos entre gateway e ERP","Tempo alto para consulta de 30s"],
+   systems:["Gateway Pagamento","ERP","CRM"],
+   artifacts:["Snapshot financeiro (fatura, vencimento, status, histórico)"],
+   processTime:"3-6min", waitTime:"0",
+   assist:"IA consulta e resume os dados para o atendente",
+   orchestration:"IA busca em múltiplos sistemas e consolida resposta estruturada",
+   automation:"Integração direta — IA lê gateway/ERP e devolve resposta sem humano",
+   metrics:["Tempo de consulta","Completude da resposta","Taxa de erro em dados"],
+   risks:["Dado desatualizado","Conciliação divergente ERP x gateway"]},
+
+  {p:2, n:"3.3", nm:"Resposta padrão (2ª via, PIX, status)", isWait:false,
+   actors:["Agente Nível-0 IA"], mood:3,
+   process:"Atendente envia 2ª via de boleto, PIX copia-cola ou comprovante. Tarefa puramente operacional.",
+   pains:["Atividade mecânica de copy/paste","Consome recurso experiente","Erro de envio à pessoa errada tem impacto"],
+   systems:["Gateway Pagamento","WhatsApp Business"],
+   artifacts:["Boleto / PIX / comprovante enviado"],
+   processTime:"2-4min", waitTime:"0",
+   assist:"IA prepara arquivo; atendente só aprova o envio",
+   orchestration:"IA gera e envia arquivo; humano acompanha a fila",
+   automation:"IA emite 2ª via, envia PIX copia-cola, devolve comprovante em < 30s",
+   metrics:["Volume de 2ª vias/dia","% automatizadas","Taxa de entrega correta"],
+   risks:["Enviar boleto/PIX à pessoa errada"]},
+
+  {p:2, n:"3.4", nm:"Escalada para financeiro humano", isWait:true,
+   actors:["Agente Nível-0 IA","Financeiro"], mood:2,
+   process:"Caso fora do padrão (disputa, negociação, inadimplência em análise) vai para o financeiro. Só opera em horário comercial.",
+   pains:["Aluno espera até o dia seguinte","Financeiro recebe caso sem contexto completo","Sem SLA claro ao aluno"],
+   systems:["Ticketing","CRM","ERP"],
+   artifacts:["Ticket escalado + SLA comunicado"],
+   processTime:"2-3min", waitTime:"2h-24h",
+   assist:"IA sugere handoff note para o financeiro",
+   orchestration:"IA monta briefing estruturado (histórico de pagamentos, tentativas, tipo de disputa)",
+   automation:"Escalada automática com threshold + agenda follow-up + notifica aluno do SLA",
+   metrics:["Taxa de escalada para o financeiro","Tempo até 1ª resposta do financeiro"],
+   risks:["Aluno se sente ignorado se SLA não for explicitado"]},
+
+  {p:2, n:"3.5", nm:"Negociação / resolução financeira", isWait:false,
+   actors:["Financeiro","Aluno"], mood:3,
+   process:"Financeiro negocia prazo, desconto, parcelamento. Humano no controle por envolver decisão comercial e risco de receita.",
+   pains:["Depende de disponibilidade do financeiro","Política de desconto parcialmente verbal","Variações por atendente"],
+   systems:["ERP","WhatsApp Business","CRM"],
+   artifacts:["Acordo firmado + condições no ERP"],
+   processTime:"15-45min", waitTime:"variável",
+   assist:"IA sugere opções de acordo baseadas em histórico e política",
+   orchestration:"IA propõe plano de negociação estruturado ao financeiro; humano decide",
+   automation:"—",
+   metrics:["Taxa de fechamento","Ticket médio pós-negociação","Aderência à política"],
+   risks:["Desvio de política de desconto","Perda de receita por negociação ad-hoc"]},
+
+  {p:2, n:"3.6", nm:"Registro financeiro e sync multi-sistema", isWait:false,
+   actors:["Agente Nível-0 IA","Financeiro"], mood:3,
+   process:"Financeiro atualiza ERP manualmente. Sync entre ERP, CRM e atendimento é lento — aluno recebe cobrança repetida.",
+   pains:["Falta de sincronia entre sistemas","Cobrança duplicada após acordo","Acordo verbal sem registro estruturado"],
+   systems:["ERP","CRM","Base de Conhecimento"],
+   artifacts:["Acordo registrado + contexto disponível"],
+   processTime:"3-5min", waitTime:"0",
+   assist:"IA sugere campos de registro ao financeiro",
+   orchestration:"IA gera registro estruturado e atualiza múltiplos sistemas após validação",
+   automation:"Registro automático + sync ERP/CRM + bloqueio de cobrança duplicada",
+   metrics:["% acordos com registro completo","Taxa de reincidência do atrito pós-acordo"],
+   risks:["Erro de registro gera nova cobrança = atrito grave com aluno"]},
+
+  // ── FASE 4 — ESCALONAMENTO TÉCNICO (2%) ─────────────────────────
+  {p:3, n:"4.1", nm:"Detecção de bug / incidente", isWait:false,
+   actors:["Agente Nível-0 IA","Aluno"], mood:1,
+   process:"Aluno relata bug ('vídeo não carrega', 'aula sumiu'). Nível-0 decide se é bug real ou mau uso.",
+   pains:["Aluno descreve mal","Atendente não é técnico, chuta severidade","Bugs duplicados abertos em paralelo"],
+   systems:["WhatsApp Business","LMS","LLM"],
+   artifacts:["Issue identificada como técnica + severidade"],
+   processTime:"3-5min", waitTime:"0",
+   assist:"IA sugere se é bug real ou mau uso",
+   orchestration:"IA distingue bug de problema de uso e define severidade",
+   automation:"Classificação + busca em base de bugs conhecidos; se já reportado, devolve status",
+   metrics:["% bugs duplicados","Acurácia de severidade","% resolvidos como 'uso correto'"],
+   risks:["Classificar bug crítico como simples"]},
+
+  {p:3, n:"4.2", nm:"Coleta estruturada de evidências", isWait:false,
+   actors:["Agente Nível-0 IA","Aluno"], mood:2,
+   process:"Atendente pede screenshots, versão do app, dispositivo, passos para reproduzir. Aluno resiste ou não sabe onde achar.",
+   pains:["Aluno não acha versão do app","Screenshots cortados ou borrados","Atendente não insiste e manda dossiê incompleto"],
+   systems:["WhatsApp Business","LLM"],
+   artifacts:["Dossiê técnico (logs, prints, device, passos)"],
+   processTime:"5-15min", waitTime:"variável",
+   assist:"IA sugere ao atendente o que pedir e como formular",
+   orchestration:"IA guia a coleta passo-a-passo até ter dossiê completo",
+   automation:"Coleta semi-automática (device via WA, logs via plataforma); pede ao aluno só o necessário",
+   metrics:["Completude do dossiê","Tempo até dossiê completo"],
+   risks:["Evidência incompleta atrasa triagem do tech em dias"]},
+
+  {p:3, n:"4.3", nm:"Abertura de ticket + SLA", isWait:true,
+   actors:["Agente Nível-0 IA","Aluno"], mood:2,
+   process:"Atendente abre ticket e promete 'vamos te avisar'. SLA raramente é comunicado com clareza.",
+   pains:["Aluno não sabe quando terá resposta","Recontato recorrente pedindo atualização","Backlog do tech invisível"],
+   systems:["Ticketing","WhatsApp Business"],
+   artifacts:["Ticket aberto + SLA comunicado"],
+   processTime:"2-3min", waitTime:"1-5 dias",
+   assist:"IA redige ticket estruturado para atendente revisar",
+   orchestration:"IA cria ticket com severidade + informa SLA automaticamente ao aluno",
+   automation:"Abertura + SLA ponta-a-ponta; aluno recebe updates automáticos",
+   metrics:["Tempo até abertura","Clareza do SLA (via NPS)","Volume de recontatos"],
+   risks:["SLA prometido que o tech não consegue cumprir (transição do head of tech)"]},
+
+  {p:3, n:"4.4", nm:"Triagem e resolução técnica", isWait:true,
+   actors:["Tech"], mood:3,
+   process:"Tech analisa ticket, reproduz bug, investiga e corrige. Com saída do head of tech, backlog cresceu e replacement começa em 2 semanas.",
+   pains:["Backlog crescente","Transição de liderança reduz capacidade","Pouca visibilidade do status ao front-office"],
+   systems:["Ticketing","LMS (dev/prod)","logs"],
+   artifacts:["Bug corrigido ou workaround documentado"],
+   processTime:"2-16h", waitTime:"1-5 dias",
+   assist:"IA sugere bugs parecidos e causas prováveis",
+   orchestration:"IA prioriza backlog e gera resumo executivo dos issues ativos para o novo head",
+   automation:"—",
+   metrics:["MTTR","Tamanho do backlog","% bugs recorrentes"],
+   risks:["Transição de liderança técnica prolonga resoluções"]},
+
+  {p:3, n:"4.5", nm:"Comunicação da solução", isWait:false,
+   actors:["Agente Nível-0 IA","Aluno"], mood:3,
+   process:"Atendente avisa o aluno que problema foi resolvido. Muitos não avisam — fix vai para prod e aluno não fica sabendo.",
+   pains:["Retorno manual e inconsistente","Percepção de abandono","Perde-se oportunidade de reengajamento"],
+   systems:["WhatsApp Business","Ticketing"],
+   artifacts:["Mensagem de resolução + pedido de confirmação"],
+   processTime:"2-3min", waitTime:"0",
+   assist:"IA redige mensagem de comunicação",
+   orchestration:"IA monta mensagem com contexto completo e envia após validação",
+   automation:"Fechamento do ticket dispara notificação automática + convite NPS",
+   metrics:["Taxa de notificação pós-fix","Tempo entre fix e aviso","NPS dos casos técnicos"],
+   risks:["Aluno sem resposta = percepção de abandono mesmo após fix"]},
+
+  // ── FASE 5 — PÓS-ATENDIMENTO E APRENDIZADO ──────────────────────
+  {p:4, n:"5.1", nm:"Feedback / NPS do atendimento", isWait:false,
+   actors:["Agente Nível-0 IA","Aluno"], mood:3,
+   process:"Hoje quase não há NPS pós-atendimento. Quando há, é enviado via outro canal com baixa taxa de resposta.",
+   pains:["Sem feedback, sem loop de melhoria","Qualidade percebida baseada em achismo","Sem separação por categoria"],
+   systems:["WhatsApp Business","CRM"],
+   artifacts:["Nota CSAT + comentário livre"],
+   processTime:"1min", waitTime:"5min-24h",
+   assist:"IA redige o convite ao NPS",
+   orchestration:"IA envia NPS + follow-up com quem não respondeu",
+   automation:"NPS automático pós-fechamento + classificação de sentimento",
+   metrics:["Taxa de resposta NPS","CSAT por categoria","% detratores"],
+   risks:["Fadiga de pesquisa","Respostas viciadas"]},
+
+  {p:4, n:"5.2", nm:"Auditoria de qualidade", isWait:false,
+   actors:["Supervisor Suporte"], mood:4,
+   process:"Hoje não há auditoria sistemática das conversas. Supervisor vê só o que for reportado como problema.",
+   pains:["Atendentes inconsistentes","Sem critério objetivo de qualidade","Gaps só aparecem após reclamação"],
+   systems:["WhatsApp Business","LLM","CRM"],
+   artifacts:["Amostra auditada + plano de correção"],
+   processTime:"2-4h/semana", waitTime:"0",
+   assist:"IA analisa amostra e destaca casos fora do padrão",
+   orchestration:"IA audita 100% das conversas IA, classifica por qualidade e reporta ao supervisor",
+   automation:"Auditoria contínua com flagging automático de casos que merecem revisão humana",
+   metrics:["Score de qualidade médio","% conversas auditadas","Tempo de auditoria"],
+   risks:["IA auditando IA sem controle humano gera blind spots"]},
+
+  {p:4, n:"5.3", nm:"Enriquecimento da base", isWait:false,
+   actors:["Agente Nível-0 IA","Supervisor Suporte"], mood:3,
+   process:"Base é atualizada esporadicamente, quando alguém lembra ou supervisor cria artigo. Defasa rapidamente.",
+   pains:["Base defasada em relação à plataforma","Respostas antigas circulando","Perguntas novas sem artigo"],
+   systems:["Base de Conhecimento","LLM"],
+   artifacts:["Artigos novos/atualizados + changelog"],
+   processTime:"30min-2h", waitTime:"0",
+   assist:"IA sugere artigos a criar/atualizar com base em gaps detectados",
+   orchestration:"IA gera draft de artigos novos a partir de conversas recorrentes; humano valida",
+   automation:"Artigos criados automaticamente; supervisor só revisa fila",
+   metrics:["Cobertura da base","Taxa de uso de artigos","Tempo até novo artigo"],
+   risks:["Artigos errados na base contaminam próximos atendimentos"]},
+
+  {p:4, n:"5.4", nm:"Padrões e dores recorrentes", isWait:false,
+   actors:["Supervisor Suporte","Head of Revenue"], mood:3,
+   process:"Supervisor extrai padrões manualmente (planilha, olhômetro). Decisões sobre produto e operação chegam devagar.",
+   pains:["Relatórios mensais estáticos","Sem drill-down dinâmico","Dores raramente chegam em produto"],
+   systems:["CRM","LLM"],
+   artifacts:["Relatório de padrões + recomendações acionáveis"],
+   processTime:"4-8h/mês", waitTime:"0",
+   assist:"IA gera pré-análise para supervisor discutir",
+   orchestration:"IA identifica clusters, tendências e recomendações; Gabriel e supervisor priorizam",
+   automation:"Dashboard em tempo real com anomalias + alertas proativos",
+   metrics:["Tempo até insight","Nº de melhorias acionadas","Redução de dores ao longo do tempo"],
+   risks:["Dashboard sem ação = só número bonito"]},
+
+  {p:4, n:"5.5", nm:"Reporting para Head of Revenue", isWait:false,
+   actors:["Supervisor Suporte","Head of Revenue"], mood:3,
+   process:"Relatório mensal em slides com números agregados e anedotas. Gabriel pede drill-downs ad-hoc.",
+   pains:["Dados desatualizados na decisão","Sem contexto para dimensionar time","Drill-down custa horas do supervisor"],
+   systems:["CRM","Dashboards"],
+   artifacts:["Report executivo (volume, CSAT, FCR, deflection, custo/atendimento)"],
+   processTime:"2-4h/mês", waitTime:"0",
+   assist:"IA gera draft do relatório mensal",
+   orchestration:"IA consolida métricas + narrativa + recomendações para Gabriel revisar",
+   automation:"Relatório automático semanal/mensal com narrativa e alertas quando KPI sai da faixa",
+   metrics:["Deflection rate","Custo por atendimento","Produtividade por atendente"],
+   risks:["Relatório sem decisão = burocracia"]}
+];
+
+// ════════════════════════════════════════════════════════════════
+// RENDERER — não alterar abaixo desta linha
+// ════════════════════════════════════════════════════════════════
+
+document.getElementById('bp-title').textContent = TITLE;
+document.getElementById('bp-subtitle').textContent = SUBTITLE;
+
+// Actor legend
+var alHtml = '';
+Object.keys(ACTOR_COLORS).forEach(function(name){
+  alHtml += '<span class="actor-sample" style="background:'+ACTOR_COLORS[name]+'">'+name+'</span> ';
+});
+document.getElementById('actor-legend').innerHTML = alHtml;
+
+var LANES_BLOCK1 = [
+  {id:"actors", icon:"\uD83D\uDC65", label:"ATORES", sub:"Quem participa", cls:"lane-actors"},
+  {id:"mood", icon:"\uD83D\uDE10", label:"HUMOR", sub:"Experiência do ator (1-5)", cls:"lane-mood"},
+  {id:"process", icon:"\uD83D\uDCCB", label:"PROCESSO ATUAL", sub:"O que acontece hoje", cls:"lane-process"},
+  {id:"pains", icon:"\uD83D\uDD25", label:"DORES", sub:"Frustrações e gargalos", cls:"lane-pains"},
+  {id:"systems", icon:"\u2699\uFE0F", label:"SISTEMAS", sub:"Ferramentas usadas", cls:"lane-systems"},
+  {id:"artifacts", icon:"\uD83D\uDCE6", label:"ARTEFATOS", sub:"O que este step produz", cls:"lane-artifacts"},
+  {id:"time", icon:"\u23F1\uFE0F", label:"TEMPO", sub:"Processo + espera", cls:"lane-time"}
+];
+
+var LANES_BLOCK2 = [
+  {id:"assist", icon:"\uD83E\uDD16", label:"ASSISTENTE", sub:"Copiloto", cls:"lane-assist"},
+  {id:"orq", icon:"\uD83C\uDFAF", label:"ORQUESTRAÇÃO", sub:"Agente coordenador", cls:"lane-orq"},
+  {id:"auto", icon:"\u26A1", label:"AUTOMAÇÃO", sub:"Agente autônomo", cls:"lane-auto"}
+];
+
+var LANES_BLOCK3 = [
+  {id:"nivelAtual", icon:"\uD83D\uDCCA", label:"NÍVEL ATUAL", sub:"Preencher no workshop", cls:"lane-workshop"},
+  {id:"nivelAlvo", icon:"\uD83C\uDFAF", label:"NÍVEL-ALVO", sub:"Preencher no workshop", cls:"lane-workshop"}
+];
+
+var LANES_BLOCK4 = [
+  {id:"metrics", icon:"\uD83D\uDCCF", label:"MÉTRICAS", sub:"Como medir", cls:"lane-metrics"},
+  {id:"risks", icon:"\u26A0\uFE0F", label:"RISCOS", sub:"O que pode dar errado", cls:"lane-risks"}
+];
+
+var N = STEPS.length;
+var COL_W = 210;
+var LABEL_W = 130;
+var TABLE_W = N * COL_W + LABEL_W;
+
+function esc(s){return s ? s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : '';}
+function actorTag(name){var c=ACTOR_COLORS[name]||"#616161";return '<span class="actor-tag" style="background:'+c+'">'+esc(name)+'</span>';}
+function sysTag(name){var c=SYS_COLORS[name]||"#616161";return '<span class="sys-tag" style="color:'+c+';border-color:'+c+'40;background:'+c+'18">'+esc(name)+'</span>';}
+function painList(arr){if(!arr||!arr.length)return '<span class="ai-empty">\u2014</span>';var h='<ul class="pain-text" style="list-style:disc;padding-left:14px;margin:0">';arr.forEach(function(p){h+='<li>'+esc(p)+'</li>';});return h+'</ul>';}
+function riskList(arr){if(!arr||!arr.length)return '<span class="ai-empty">\u2014</span>';var h='<ul class="risk-text" style="list-style:disc;padding-left:14px;margin:0">';arr.forEach(function(r){h+='<li>'+esc(r)+'</li>';});return h+'</ul>';}
+function metricList(arr){if(!arr||!arr.length)return '<span class="ai-empty">\u2014</span>';var h='';arr.forEach(function(m){h+='<div class="metric-item">'+esc(m)+'</div>';});return h;}
+function aiText(s){if(!s||s==='\u2014'||s==='—')return '<span class="ai-empty">\u2014</span>';return '<span class="ai-text">'+esc(s)+'</span>';}
+
+var t = document.getElementById('bp');
+t.style.width = TABLE_W + 'px';
+var html = '';
+
+html += '<colgroup><col style="width:'+LABEL_W+'px;min-width:'+LABEL_W+'px">';
+for(var i=0;i<N;i++) html += '<col style="width:'+COL_W+'px;min-width:'+COL_W+'px">';
+html += '</colgroup>';
+
+// Phase header
+html += '<tr><td class="phase-cell" style="background:#1C1C1C;position:sticky;left:0;z-index:12">&nbsp;</td>';
+PHASES.forEach(function(ph){html += '<td class="phase-cell" colspan="'+ph.count+'" style="background:'+ph.color+';border-left:2px solid rgba(255,255,255,.3)">'+esc(ph.name)+'</td>';});
+html += '</tr>';
+
+// Step header
+html += '<tr><td class="row-label" style="background:#1C1C1C;border-bottom:2px solid #FF7A0D;z-index:12"><span class="rl-icon" style="color:#FF7A0D">\uD83D\uDCCD</span><span class="rl-main" style="color:#FF7A0D">STEP</span></td>';
+STEPS.forEach(function(s){var ph=PHASES[s.p];var cls=s.isWait?'step-hdr step-hdr-wait':'step-hdr';html+='<td class="'+cls+'"><span class="step-dot" style="background:'+ph.color+'">'+esc(s.n)+'</span><br><span class="step-name">'+esc(s.nm)+'</span>';if(s.isWait)html+='<br><span class="wait-badge">\u26A0\uFE0F WAIT</span>';html+='</td>';});
+html += '</tr>';
+
+function sepRow(label){return '<tr class="sep-row"><td class="row-label" style="background:#1C1C1C;color:#FF7A0D;position:sticky;left:0;z-index:10;border-color:#1C1C1C">&nbsp;</td><td colspan="'+N+'" style="background:#1C1C1C;color:#FF7A0D;font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;text-align:center;padding:6px 8px;border-color:#1C1C1C">'+esc(label)+'</td></tr>';}
+
+html += sepRow('\u2014 O QUE ACONTECE HOJE \u2014');
+
+LANES_BLOCK1.forEach(function(lane){
+  html += '<tr class="'+lane.cls+'"><td class="row-label '+lane.cls+'"><span class="rl-icon">'+lane.icon+'</span><span class="rl-main">'+esc(lane.label)+'</span><div class="rl-sub">'+esc(lane.sub)+'</div></td>';
+  if(lane.id==='mood'){
+    html += '<td class="cell mood-cell" colspan="'+N+'" style="padding:4px 0;background:#FFF8F3"><div id="mood-container" style="width:'+(N*COL_W)+'px;height:80px;position:relative"></div></td>';
+  } else {
+    STEPS.forEach(function(s){
+      html += '<td class="cell">';
+      if(lane.id==='actors')(s.actors||[]).forEach(function(a){html+=actorTag(a);});
+      else if(lane.id==='process')html+='<span style="font-size:10px;line-height:1.5">'+esc(s.process)+'</span>';
+      else if(lane.id==='pains')html+=painList(s.pains);
+      else if(lane.id==='systems')(s.systems||[]).forEach(function(sy){html+=sysTag(sy);});
+      else if(lane.id==='artifacts'){if(s.artifacts&&s.artifacts.length)s.artifacts.forEach(function(a){html+='<div style="font-size:10px;margin-bottom:1px">\u2022 '+esc(a)+'</div>';});else html+='<span class="ai-empty">\u2014</span>';}
+      else if(lane.id==='time'){html+='<div><span class="time-process">\u23F3 '+esc(s.processTime)+'</span></div>';if(s.isWait)html+='<div style="margin-top:3px"><span class="time-wait-critical">\u26A0\uFE0F '+esc(s.waitTime)+'</span></div>';else html+='<div style="margin-top:3px;font-size:10px;color:#9E9E9E">\u23F8 '+esc(s.waitTime)+'</div>';}
+      html += '</td>';
+    });
+  }
+  html += '</tr>';
+});
+
+html += sepRow('\u2014 COMO IA PODE AJUDAR \u2014');
+
+LANES_BLOCK2.forEach(function(lane){
+  html += '<tr class="'+lane.cls+'"><td class="row-label '+lane.cls+'"><span class="rl-icon">'+lane.icon+'</span><span class="rl-main">'+esc(lane.label)+'</span><div class="rl-sub">'+esc(lane.sub)+'</div></td>';
+  STEPS.forEach(function(s){html+='<td class="cell">';if(lane.id==='assist')html+=aiText(s.assist);else if(lane.id==='orq')html+=aiText(s.orchestration);else if(lane.id==='auto')html+=aiText(s.automation);html+='</td>';});
+  html += '</tr>';
+});
+
+html += sepRow('\u2014 DECISÃO DO TIME (PREENCHER NO WORKSHOP) \u2014');
+
+LANES_BLOCK3.forEach(function(lane){
+  html += '<tr class="'+lane.cls+'"><td class="row-label '+lane.cls+'"><span class="rl-icon">'+lane.icon+'</span><span class="rl-main">'+esc(lane.label)+'</span><div class="rl-sub">'+esc(lane.sub)+'</div></td>';
+  STEPS.forEach(function(){html+='<td class="cell" style="border-style:dashed"><div class="workshop-placeholder">Preencher no workshop</div></td>';});
+  html += '</tr>';
+});
+
+html += sepRow('\u2014 MEDIÇÃO \u2014');
+
+LANES_BLOCK4.forEach(function(lane){
+  html += '<tr class="'+lane.cls+'"><td class="row-label '+lane.cls+'"><span class="rl-icon">'+lane.icon+'</span><span class="rl-main">'+esc(lane.label)+'</span><div class="rl-sub">'+esc(lane.sub)+'</div></td>';
+  STEPS.forEach(function(s){html+='<td class="cell">';if(lane.id==='metrics')html+=metricList(s.metrics);else if(lane.id==='risks')html+=riskList(s.risks);html+='</td>';});
+  html += '</tr>';
+});
+
+t.innerHTML = html;
+
+// Mood SVG — curva Catmull-Rom
+(function(){
+  var container=document.getElementById('mood-container');if(!container)return;
+  var moods=STEPS.map(function(s){return s.mood;});
+  var w=N*COL_W,h=80,padTop=12,padBot=12,plotH=h-padTop-padBot;
+  function moodY(v){return padTop+plotH-((v-1)/4)*plotH;}
+  function stepX(i){return(i+0.5)*COL_W;}
+  var points=moods.map(function(m,i){return{x:stepX(i),y:moodY(m)};});
+  function catmullRomToBezier(pts){if(pts.length<2)return '';var d='M '+pts[0].x+' '+pts[0].y;for(var i=0;i<pts.length-1;i++){var p0=pts[Math.max(i-1,0)],p1=pts[i],p2=pts[Math.min(i+1,pts.length-1)],p3=pts[Math.min(i+2,pts.length-1)],tension=0.35;d+=' C '+(p1.x+(p2.x-p0.x)*tension)+','+(p1.y+(p2.y-p0.y)*tension)+' '+(p2.x-(p3.x-p1.x)*tension)+','+(p2.y-(p3.y-p1.y)*tension)+' '+p2.x+','+p2.y;}return d;}
+  var pathD=catmullRomToBezier(points);
+  var fillD=pathD+' L '+points[points.length-1].x+','+h+' L '+points[0].x+','+h+' Z';
+  var svg='<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg" style="display:block">';
+  svg+='<defs><linearGradient id="moodGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF7A0D" stop-opacity="0.25"/><stop offset="100%" stop-color="#FF7A0D" stop-opacity="0.03"/></linearGradient></defs>';
+  [1,2,3,4,5].forEach(function(v){var y=moodY(v);svg+='<line x1="0" y1="'+y+'" x2="'+w+'" y2="'+y+'" stroke="#E5DDDA" stroke-width="0.5" stroke-dasharray="4,4"/>';});
+  svg+='<text x="4" y="'+(moodY(5)-2)+'" font-size="10" fill="#9E9E9E" font-family="Helvetica Neue,Arial">\uD83D\uDE0A 5</text>';
+  svg+='<text x="4" y="'+(moodY(3)+4)+'" font-size="10" fill="#9E9E9E" font-family="Helvetica Neue,Arial">\uD83D\uDE10 3</text>';
+  svg+='<text x="4" y="'+(moodY(1)+4)+'" font-size="10" fill="#9E9E9E" font-family="Helvetica Neue,Arial">\uD83D\uDE24 1</text>';
+  for(var gi=1;gi<N;gi++)svg+='<line x1="'+(gi*COL_W)+'" y1="0" x2="'+(gi*COL_W)+'" y2="'+h+'" stroke="#E5DDDA" stroke-width="0.5"/>';
+  var cumulative=0;PHASES.forEach(function(ph,idx){if(idx>0)svg+='<line x1="'+(cumulative*COL_W)+'" y1="0" x2="'+(cumulative*COL_W)+'" y2="'+h+'" stroke="#BDBDBD" stroke-width="1.5"/>';cumulative+=ph.count;});
+  svg+='<path d="'+fillD+'" fill="url(#moodGrad)"/>';
+  svg+='<path d="'+pathD+'" fill="none" stroke="#FF7A0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+  points.forEach(function(pt,idx){var m=moods[idx];var dotColor=m<=2?'#C62828':(m>=4?'#2E7D32':'#FF7A0D');if(STEPS[idx].isWait)svg+='<circle cx="'+pt.x+'" cy="'+pt.y+'" r="10" fill="#C62828" fill-opacity="0.12"/>';svg+='<circle cx="'+pt.x+'" cy="'+pt.y+'" r="5" fill="'+dotColor+'" stroke="#fff" stroke-width="1.5"/>';svg+='<text x="'+pt.x+'" y="'+(pt.y-9)+'" text-anchor="middle" font-size="9" font-weight="700" fill="'+dotColor+'" font-family="Helvetica Neue,Arial">'+m+'</text>';});
+  svg+='</svg>';
+  container.innerHTML=svg;
+})();
+</script>
+</body>
+</html>
