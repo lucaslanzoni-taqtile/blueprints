@@ -2,7 +2,7 @@
 
 ## Tese Central
 
-> MGMT tem produto vivo com receita e um ponto único técnico. O risco não é construir, é continuar operando sem cair. A Taqtile entra como parceiro externo sênior: primeiro trava a rede de proteção (framework de evals), depois acompanha a reescrita LangChain com a rede ativa, e sai quando a MGMT estiver operando o framework sozinha.
+> A MGMT tem produto vivo e receita — o próximo passo é evoluir sem medo de quebrar o que já funciona. A Taqtile entra como parceira sênior para montar com você uma rede de evals e acompanhar a reescrita do LangChain como migração controlada. Ao final, você opera tudo com autonomia — a Taqtile segue por perto, sem virar dependência.
 
 ## Visão Geral
 
