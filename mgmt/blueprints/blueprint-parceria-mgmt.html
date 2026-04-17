@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint — MGMT × Taqtile</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Helvetica Neue",Arial,sans-serif;background:#f5f2f0;color:#1C1C1C}
+.header{padding:28px 32px 0}
+.header h1{font-size:20px;font-weight:800;color:#1C1C1C;letter-spacing:.03em}
+.header .sub{font-size:12px;color:#7F7673;margin-top:5px;letter-spacing:.01em}
+.thesis{margin:18px 32px 0;padding:18px 22px;background:#fff;border-left:4px solid #FF7A0D;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+.thesis .thesis-label{font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:#FF7A0D;margin-bottom:8px}
+.thesis .thesis-text{font-size:13px;line-height:1.6;color:#2B2A29;font-style:italic}
+.legend{display:flex;gap:18px;padding:14px 32px 16px;align-items:center;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:#5B5654}
+.legend-dot{width:14px;height:14px;border-radius:3px}
+.ldot-current{background:#FCFAFA;border:1px solid #D5CDCA}
+.ldot-assist{background:#E8F5E9;border:1px solid #81C784}
+.ldot-orq{background:#E3F2FD;border:1px solid #64B5F6}
+.ldot-auto{background:#F3E5F5;border:1px solid #BA68C8}
+.ldot-workshop{background:#FFF8E1;border:1px dashed #FFB74D}
+.ldot-measure{background:#EFEBE9;border:1px solid #BCAAA4}
+.wait-badge-legend{display:inline-block;background:#FFEBEE;color:#C62828;padding:2px 7px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:.04em}
+.actor-sample{display:inline-block;padding:1px 7px;border-radius:3px;font-size:9px;font-weight:700;color:#fff;letter-spacing:.03em;text-transform:uppercase}
+.scroll{overflow-x:auto;margin:0 16px 32px;border:1px solid #D5CDCA;border-radius:8px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+table{border-collapse:collapse;table-layout:fixed}
+th,td{border:1px solid #E5DDDA}
+.col-label{width:130px;min-width:130px}
+.col-step{width:210px;min-width:210px}
+.phase-cell{padding:7px 12px;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#fff;text-align:center;border:none}
+.step-hdr{text-align:center;padding:10px 6px 8px;background:#1C1C1C;vertical-align:middle;border-bottom:2px solid #FF7A0D}
+.step-hdr-wait{background:#2C1A1A;border-bottom:2px solid #C62828}
+.step-dot{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:10px;font-weight:800;color:#fff;margin-bottom:4px}
+.step-name{font-size:10px;font-weight:600;color:#fff;display:block;letter-spacing:.01em;line-height:1.35}
+.wait-badge{display:inline-block;background:#FFCDD2;color:#B71C1C;padding:1px 6px;border-radius:3px;font-size:8px;font-weight:800;letter-spacing:.05em;margin-top:4px}
+.row-label{padding:8px 7px;vertical-align:middle;position:sticky;left:0;z-index:10;border-right:2px solid #D5CDCA !important;min-width:130px;width:130px}
+.rl-icon{font-size:15px;display:block;margin-bottom:2px}
+.rl-main{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;line-height:1.3}
+.rl-sub{font-size:8px;color:#9E9E9E;margin-top:1px;line-height:1.2;font-weight:400;letter-spacing:0}
+.sep-row td{background:#1C1C1C;color:#FF7A0D;font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;text-align:center;padding:6px 8px;border-color:#1C1C1C}
+.sep-row .row-label{background:#1C1C1C;color:#FF7A0D}
+.lane-actors .row-label,.lane-actors .cell{background:#FCFAFA}
+.lane-actors .rl-main{color:#5B5654}
+.lane-mood .row-label,.lane-mood .cell{background:#FFF8F3}
+.lane-mood .rl-main{color:#E65100}
+.lane-process .row-label,.lane-process .cell{background:#FCFAFA}
+.lane-process .rl-main{color:#5B5654}
+.lane-pains .row-label,.lane-pains .cell{background:#FFF5F5}
+.lane-pains .rl-main{color:#C62828}
+.lane-systems .row-label,.lane-systems .cell{background:#FCFAFA}
+.lane-systems .rl-main{color:#5B5654}
+.lane-artifacts .row-label,.lane-artifacts .cell{background:#FCFAFA}
+.lane-artifacts .rl-main{color:#5B5654}
+.lane-time .row-label,.lane-time .cell{background:#FCFAFA}
+.lane-time .rl-main{color:#5B5654}
+.lane-assist .row-label,.lane-assist .cell{background:#E8F5E9}
+.lane-assist .rl-main{color:#2E7D32}
+.lane-orq .row-label,.lane-orq .cell{background:#E3F2FD}
+.lane-orq .rl-main{color:#1565C0}
+.lane-auto .row-label,.lane-auto .cell{background:#F3E5F5}
+.lane-auto .rl-main{color:#7B1FA2}
+.lane-workshop .row-label,.lane-workshop .cell{background:#FFFDE7;border-style:dashed}
+.lane-workshop .rl-main{color:#F57F17}
+.lane-metrics .row-label,.lane-metrics .cell{background:#EFEBE9}
+.lane-metrics .rl-main{color:#5D4037}
+.lane-risks .row-label,.lane-risks .cell{background:#FFF3E0}
+.lane-risks .rl-main{color:#E65100}
+.cell{padding:7px 8px;vertical-align:top;font-size:10px;line-height:1.5;color:#2B2A29}
+.cell p{margin:0}
+.actor-tag{display:inline-block;padding:2px 7px;border-radius:3px;font-size:8px;font-weight:700;color:#fff;letter-spacing:.04em;text-transform:uppercase;margin:1px 2px}
+.sys-tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:8px;font-weight:600;letter-spacing:.02em;margin:1px 2px;border:1px solid}
+.pain-text{color:#C62828;font-size:10px;line-height:1.5}
+.pain-text li{margin-bottom:2px;margin-left:12px}
+.time-process{font-weight:600;color:#2E7D32}
+.time-wait{font-weight:700;color:#C62828;background:#FFEBEE;padding:1px 5px;border-radius:2px}
+.time-wait-critical{font-weight:700;color:#fff;background:#C62828;padding:2px 6px;border-radius:3px}
+.workshop-placeholder{color:#BDBDBD;font-style:italic;font-size:10px;text-align:center;padding:12px 4px}
+.metric-item{font-size:10px;color:#5D4037;margin-bottom:2px}
+.metric-item strong{color:#3E2723}
+.risk-text{color:#E65100;font-size:10px;line-height:1.4}
+.risk-text li{margin-bottom:2px;margin-left:12px}
+.ai-text{font-size:10px;line-height:1.5}
+.ai-empty{color:#BDBDBD;font-style:italic}
+.mood-cell{padding:0;vertical-align:middle;overflow:visible}
+@media print{body{background:#fff}.scroll{border:none;box-shadow:none;margin:0}.header{padding:16px 0 0}.legend{padding:8px 0}.thesis{margin:12px 0}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1 id="bp-title"></h1>
+  <div class="sub" id="bp-subtitle"></div>
+</div>
+
+<div class="thesis">
+  <div class="thesis-label">Tese Central</div>
+  <div class="thesis-text" id="bp-thesis"></div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot ldot-current"></div>Processo Atual</div>
+  <div class="legend-item"><div class="legend-dot ldot-assist"></div>Assistente (Copiloto)</div>
+  <div class="legend-item"><div class="legend-dot ldot-orq"></div>Orquestração</div>
+  <div class="legend-item"><div class="legend-dot ldot-auto"></div>Automação</div>
+  <div class="legend-item"><div class="legend-dot ldot-workshop"></div>Workshop (preencher)</div>
+  <div class="legend-item"><div class="legend-dot ldot-measure"></div>Medição</div>
+  <div class="legend-item" style="margin-left:16px"><span class="wait-badge-legend">&#9888;&#65039; WAIT TIME</span> Gargalo de espera</div>
+  <div class="legend-item" id="actor-legend" style="margin-left:16px"></div>
+</div>
+
+<div class="scroll"><table id="bp"></table></div>
+
+<script>
+var TITLE = "BLUEPRINT: MGMT × TAQTILE — PARCERIA TÉCNICA";
+var SUBTITLE = "Framework de Evals + Reescrita LangChain + Hand-off | Taqtile 2026";
+var THESIS = "MGMT tem produto vivo com receita e um ponto único técnico. O risco não é construir, é continuar operando sem cair. A Taqtile entra como parceiro externo sênior: primeiro trava a rede de proteção (framework de evals), depois acompanha a reescrita LangChain com a rede ativa, e sai quando a MGMT estiver operando o framework sozinha.";
+
+var PHASES = [
+  {id:"fase1", name:"FASE 1 — IMERSÃO E FRAMEWORK DE EVALS (4-6 SEM)", color:"#1565C0", count:10},
+  {id:"fase2", name:"FASE 2 — APOIO À REESCRITA LANGCHAIN (8-12 SEM)", color:"#FF7A0D", count:9},
+  {id:"fase3", name:"FASE 3 — HAND-OFF E AUTONOMIA (2-3 SEM)", color:"#2E7D32", count:5}
+];
+
+var ACTOR_COLORS = {
+  "MGMT":"#1565C0",
+  "Taqtile":"#FF7A0D"
+};
+
+var SYS_COLORS = {
+  "Amazon Bedrock":"#FF9900",
+  "LangChain 0.14":"#1C3A3A",
+  "LangChain 1.10":"#1C3A3A",
+  "Python":"#3776AB",
+  "CI/CD MGMT":"#616161",
+  "Plataforma validação Taqtile":"#FF7A0D",
+  "LangWatch Scenario":"#7C3AED",
+  "Plataforma MGMT":"#1565C0",
+  "Logs MGMT":"#455A64",
+  "Google Meet":"#00897B",
+  "Notion":"#1C1C1C",
+  "Miro":"#FFD02F"
+};
+
+var STEPS = [
+  // FASE 1
+  {p:0, n:"1.1", nm:"Kick-off e alinhamento", isWait:false,
+   actors:["MGMT","Taqtile"], mood:4,
+   process:"Reunião inicial entre MGMT e Taqtile para alinhar escopo, cadência part-time, entregáveis e critérios de sucesso. Define acesso, ritmo de sincronização e processo decisório conjunto.",
+   pains:["MGMT tem um ponto único técnico — qualquer indisponibilidade bloqueia Taqtile","Risco de escopo amorfo se critérios não ficarem explícitos"],
+   systems:["Google Meet","Notion"],
+   artifacts:["Termo de parceria","Cadência definida","Critérios de sucesso"],
+   processTime:"2h", waitTime:"0",
+   assist:"IA sugere template de kick-off baseado em engajamentos similares.",
+   orchestration:"—",
+   automation:"—",
+   metrics:["Clareza declarada do escopo","Tempo até primeira ação conjunta"],
+   risks:["Expectativas desalinhadas sobre autonomia vs dependência"]},
+
+  {p:0, n:"1.2", nm:"Imersão no produto", isWait:false,
+   actors:["MGMT","Taqtile"], mood:4,
+   process:"Taqtile observa o produto MGMT em operação, lê código-fonte e interage com o agente como usuário final. MGMT acompanha para contextualizar decisões arquiteturais passadas.",
+   pains:["Documentação limitada — único dev não priorizou escrever","Decisões passadas sem histórico formal"],
+   systems:["Plataforma MGMT","Python","LangChain 0.14","Amazon Bedrock"],
+   artifacts:["Mapa de fluxos conversacionais","Inventário de agentes","Pontos de integração"],
+   processTime:"8-12h", waitTime:"0",
+   assist:"IA resume código-fonte e identifica padrões arquiteturais.",
+   orchestration:"IA organiza inventário de fluxos em formato navegável, MGMT valida.",
+   automation:"—",
+   metrics:["Cobertura do mapeamento","Nº de fluxos identificados"],
+   risks:["Ambiente de staging sem paridade com produção"]},
+
+  {p:0, n:"1.3", nm:"Análise de logs de produção", isWait:false,
+   actors:["MGMT","Taqtile"], mood:3,
+   process:"Taqtile analisa logs de 30-60 dias para identificar padrões de erro, drift comportamental e cenários de alto risco (ex: portfólio com posições deletadas reaparecendo no agente).",
+   pains:["Logs volumosos sem categorização","Erros silenciosos difíceis de detectar","Dados sensíveis nos logs exigem tratamento compliance"],
+   systems:["Logs MGMT","Amazon Bedrock","Python"],
+   artifacts:["Catálogo de padrões de erro","Top 20 cenários de falha","Heatmap de risco"],
+   processTime:"6-10h", waitTime:"1-2 dias (acesso histórico)",
+   assist:"IA clusteriza erros por similaridade semântica.",
+   orchestration:"IA gera relatório com priorização, MGMT valida ranqueamento.",
+   automation:"—",
+   metrics:["Nº de clusters de erro identificados","% de cobertura sobre volume total"],
+   risks:["Dados sensíveis nos logs violam perímetro regulatório Bedrock"]},
+
+  {p:0, n:"1.4", nm:"Cenários críticos definidos", isWait:true,
+   actors:["MGMT","Taqtile"], mood:3,
+   process:"Sessão conjunta para priorizar cenários que entram na suíte de testes. MGMT traz conhecimento de domínio financeiro, Taqtile traz padrões de falha em LLM.",
+   pains:["MGMT (único decisor) vira gargalo se indisponível","Trade-off entre cobertura e velocidade"],
+   systems:["Miro","Notion"],
+   artifacts:["Lista priorizada de cenários","Critérios de aprovação por cenário"],
+   processTime:"3-4h", waitTime:"3-5 dias (disponibilidade MGMT)",
+   assist:"IA sugere cenários a partir de logs e padrões conhecidos.",
+   orchestration:"IA gera matriz de priorização (impacto × frequência), time valida.",
+   automation:"—",
+   metrics:["Nº de cenários priorizados","Distribuição risco alto/médio/baixo"],
+   risks:["MGMT como ponto único de validação do domínio"]},
+
+  {p:0, n:"1.5", nm:"Desenho do framework", isWait:false,
+   actors:["Taqtile"], mood:4,
+   process:"Taqtile desenha a arquitetura do framework de evals: geração de entradas, comparação com ground truth, agregação de métricas e relatórios. Respeita restrições Bedrock.",
+   pains:["Restrições regulatórias exigem arquitetura específica","Precisa rodar 10-20-100 iterações com custo controlado (~US$15-20/sem)"],
+   systems:["Python","Amazon Bedrock","Plataforma validação Taqtile"],
+   artifacts:["Especificação técnica","Diagrama de componentes","Estimativa de custo por iteração"],
+   processTime:"8-12h", waitTime:"0",
+   assist:"—",
+   orchestration:"IA prototipa variações arquiteturais para comparação.",
+   automation:"—",
+   metrics:["Aderência a requisitos regulatórios","Custo estimado por bateria semanal"],
+   risks:["Arquitetura incompatível com stack MGMT existente"]},
+
+  {p:0, n:"1.6", nm:"Implementação da suíte base", isWait:false,
+   actors:["Taqtile"], mood:4,
+   process:"Taqtile implementa o framework e a suíte inicial cobrindo os cenários priorizados. Desenvolvimento em repositório próprio antes de integrar à MGMT.",
+   pains:["Paridade ambiente local vs Bedrock pode variar","Escopo pode inflar durante implementação"],
+   systems:["Python","Plataforma validação Taqtile","LangWatch Scenario"],
+   artifacts:["Suíte de testes funcionando","Dashboard de métricas"],
+   processTime:"20-30h", waitTime:"0",
+   assist:"IA gera casos de teste a partir de cenários.",
+   orchestration:"IA executa baterias e consolida métricas em relatório.",
+   automation:"—",
+   metrics:["% de cenários cobertos","Tempo médio de execução da suíte"],
+   risks:["Escopo inflando durante implementação"]},
+
+  {p:0, n:"1.7", nm:"Integração CI/CD MGMT", isWait:true,
+   actors:["MGMT","Taqtile"], mood:3,
+   process:"Integração da suíte no pipeline de CI/CD da MGMT. Requer credenciais, permissões, adaptação a padrões internos e validação de compliance Bedrock.",
+   pains:["MGMT não tinha pipeline de testes LLM — gates precisam ser desenhados do zero","Credenciais/permissões dependem de MGMT agir"],
+   systems:["CI/CD MGMT","Amazon Bedrock","Python"],
+   artifacts:["Pipeline integrado","Gates de qualidade configurados"],
+   processTime:"6-10h", waitTime:"3-7 dias (permissões, compliance)",
+   assist:"IA gera templates de configuração CI para MGMT adaptar.",
+   orchestration:"IA valida permissões e testa pipeline em ambiente isolado antes de prod.",
+   automation:"Pipeline executa bateria em cada PR automaticamente.",
+   metrics:["Tempo total de integração","% de flakiness do pipeline"],
+   risks:["Compliance Bedrock bloqueia execução automática"]},
+
+  {p:0, n:"1.8", nm:"Validação com cenários reais", isWait:false,
+   actors:["MGMT","Taqtile"], mood:4,
+   process:"MGMT valida se os outputs da suíte correspondem ao comportamento esperado do ponto de vista do domínio financeiro. Ajustes de ground truth.",
+   pains:["MGMT como único avaliador do domínio — risco de viés","MGMT pode aprovar por exaustão"],
+   systems:["Plataforma validação Taqtile","Logs MGMT"],
+   artifacts:["Ground truth calibrado","Relatório de primeira validação"],
+   processTime:"4-6h", waitTime:"0",
+   assist:"IA compara output vs ground truth e sinaliza divergências.",
+   orchestration:"IA gera relatório com divergências ranqueadas, MGMT aprova.",
+   automation:"—",
+   metrics:["% de divergências sinalizadas corretamente","Tempo de revisão por cenário"],
+   risks:["Aprovação rápida demais mascara problemas"]},
+
+  {p:0, n:"1.9", nm:"Bateria semanal inicial", isWait:false,
+   actors:["Taqtile"], mood:4,
+   process:"Primeira bateria oficial: 10-20-100 iterações rodando em paralelo. Coleta de métricas de consistência, custo, latência e qualidade.",
+   pains:["Custo da bateria precisa caber no orçamento (~US$15-20/sem)"],
+   systems:["Plataforma validação Taqtile","Amazon Bedrock","LangWatch Scenario"],
+   artifacts:["Relatório de baseline","Métricas de consistência estatística"],
+   processTime:"4-6h (setup)", waitTime:"0",
+   assist:"—",
+   orchestration:"IA executa 10+20+100 iterações, agrega métricas estatísticas.",
+   automation:"Bateria semanal roda em agendamento fixo.",
+   metrics:["Variância entre iterações","Custo real vs estimado","Tempo total de execução"],
+   risks:["Custo acima do previsto inviabiliza cadência semanal"]},
+
+  {p:0, n:"1.10", nm:"Calibração de thresholds", isWait:true,
+   actors:["MGMT","Taqtile"], mood:3,
+   process:"Definição dos limites pass/fail. Trade-off entre sensibilidade (detectar regressão) e especificidade (evitar falsos positivos).",
+   pains:["Thresholds restritivos geram ruído","Thresholds folgados deixam passar regressão","Requer iteração com MGMT para calibrar"],
+   systems:["Plataforma validação Taqtile"],
+   artifacts:["Thresholds por métrica","Documentação da racionalização"],
+   processTime:"3-4h", waitTime:"3-5 dias (iteração MGMT)",
+   assist:"IA simula impacto de diferentes thresholds sobre dados históricos.",
+   orchestration:"IA propõe thresholds ótimos via análise de trade-off, MGMT valida.",
+   automation:"—",
+   metrics:["Taxa de falso positivo","Taxa de falso negativo"],
+   risks:["Thresholds calibrados em dados que não representam produção futura"]},
+
+  // FASE 2
+  {p:1, n:"2.1", nm:"Planejamento da migração", isWait:false,
+   actors:["MGMT","Taqtile"], mood:4,
+   process:"Plano de migração LangChain 0.14 → 1.10: ordem das cadeias, estratégia gradual vs big-bang, critérios de rollback. Safety net da Fase 1 está ativa.",
+   pains:["LangChain 1.10 tem breaking changes em retrievers, memória e agents"],
+   systems:["LangChain 0.14","LangChain 1.10","Notion"],
+   artifacts:["Plano de migração","Cronograma faseado","Critérios de rollback"],
+   processTime:"4-6h", waitTime:"0",
+   assist:"IA compara APIs 0.14 vs 1.10 e sinaliza breaking changes.",
+   orchestration:"IA gera roadmap detalhado, MGMT valida.",
+   automation:"—",
+   metrics:["Granularidade do plano","% de riscos identificados"],
+   risks:["Dependências não documentadas emergem durante migração"]},
+
+  {p:1, n:"2.2", nm:"Mapeamento de dependências", isWait:false,
+   actors:["Taqtile"], mood:3,
+   process:"Varredura do código MGMT para identificar todos os usos de LangChain 0.14: imports, padrões de chain, tipos de memória, retrievers.",
+   pains:["Código sem tipagem estrita dificulta varredura estática","APIs usadas dinamicamente escapam da análise"],
+   systems:["Python","LangChain 0.14"],
+   artifacts:["Grafo de dependências","Inventário de APIs em uso"],
+   processTime:"6-8h", waitTime:"0",
+   assist:"IA faz análise estática e gera inventário de APIs usadas.",
+   orchestration:"—",
+   automation:"Script de varredura roda em CI e mantém inventário atualizado.",
+   metrics:["% cobertura da varredura","Nº de APIs obsoletas identificadas"],
+   risks:["APIs dinâmicas invisíveis escapam do inventário"]},
+
+  {p:1, n:"2.3", nm:"Prototipagem LangChain 1.10", isWait:false,
+   actors:["Taqtile"], mood:4,
+   process:"Taqtile reescreve uma cadeia representativa em branch isolado para validar arquitetura LangChain 1.10 + Bedrock antes de escalar.",
+   pains:["Diferenças de comportamento entre 0.14 e 1.10 em memória e streaming"],
+   systems:["LangChain 1.10","Python","Amazon Bedrock"],
+   artifacts:["Protótipo funcional","Padrão arquitetural replicável"],
+   processTime:"12-20h", waitTime:"0",
+   assist:"IA sugere tradução de APIs 0.14 → 1.10.",
+   orchestration:"IA gera diff entre implementações e destaca riscos.",
+   automation:"—",
+   metrics:["Paridade funcional com versão 0.14","Mudança de latência"],
+   risks:["Padrão arquitetural não generaliza para outras cadeias"]},
+
+  {p:1, n:"2.4", nm:"Migração cadeia-a-cadeia", isWait:false,
+   actors:["MGMT","Taqtile"], mood:3,
+   process:"Migração incremental das cadeias identificadas. Cada cadeia passa pela suíte de evals (Fase 1) antes de merge. Padrão validado no protótipo se aplica.",
+   pains:["MGMT faz context switching entre cadeias e tasks operacionais","Acúmulo de débito se migração pausa em estado misto"],
+   systems:["LangChain 1.10","Plataforma validação Taqtile","CI/CD MGMT"],
+   artifacts:["Cadeias migradas individualmente","Relatórios de eval por cadeia"],
+   processTime:"6-12h por cadeia", waitTime:"1-2 dias por cadeia (validação MGMT)",
+   assist:"IA aplica padrão arquitetural cadeia-por-cadeia.",
+   orchestration:"IA executa eval após cada cadeia migrada, gera relatório.",
+   automation:"Merge bloqueado automaticamente se eval falha.",
+   metrics:["% cadeias migradas","Tempo médio por cadeia","Taxa de rollback"],
+   risks:["Migração pausada em estado misto gera débito técnico"]},
+
+  {p:1, n:"2.5", nm:"Regressão contínua", isWait:false,
+   actors:["Taqtile"], mood:4,
+   process:"A cada merge de cadeia migrada, a suíte de evals roda automaticamente e compara comportamento vs baseline. Rede de proteção ativa durante toda a migração.",
+   pains:["Flakiness LLM pode gerar alarmes falsos"],
+   systems:["Plataforma validação Taqtile","CI/CD MGMT","LangWatch Scenario"],
+   artifacts:["Relatórios de regressão por merge","Alertas de drift"],
+   processTime:"0 (automático)", waitTime:"0",
+   assist:"—",
+   orchestration:"—",
+   automation:"Suíte roda em cada merge, bloqueia se métricas degradam.",
+   metrics:["Taxa de detecção de regressão","Taxa de falso positivo"],
+   risks:["Suíte fica obsoleta conforme produto evolui"]},
+
+  {p:1, n:"2.6", nm:"Drift e memória (dor crônica)", isWait:false,
+   actors:["MGMT","Taqtile"], mood:2,
+   process:"Ataque específico ao problema de memória/determinismo. Implementação de checkpointer customizado e API reset-to-message. Essa dor persiste há 6 meses na MGMT.",
+   pains:["Problema persiste há 6 meses sem solução","Cada tentativa anterior gerou bola de neve","Portfólio deletado reaparece no agente"],
+   systems:["LangChain 1.10","Plataforma validação Taqtile","Python"],
+   artifacts:["Checkpointer customizado funcional","API reset-to-message","Testes de regressão dedicados"],
+   processTime:"15-25h", waitTime:"0",
+   assist:"IA analisa patterns de memória em logs e sugere pontos de intervenção.",
+   orchestration:"IA testa variações de checkpointer via suíte de evals.",
+   automation:"—",
+   metrics:["Taxa de recorrência do bug","Cobertura de cenários de memória"],
+   risks:["Fix introduz latência inaceitável no caminho feliz"]},
+
+  {p:1, n:"2.7", nm:"Rollout controlado", isWait:true,
+   actors:["MGMT","Taqtile"], mood:3,
+   process:"Migração em produção para subset controlado (ex: 20 usuários de 1.000). Aprendizado Taqtile aplicado: testar em escala reduzida antes de expandir.",
+   pains:["Seleção do subset precisa ser representativa","Rollback precisa ser instantâneo"],
+   systems:["Plataforma MGMT","LangChain 1.10","Amazon Bedrock"],
+   artifacts:["Feature flag configurada","Subset de usuários no novo fluxo"],
+   processTime:"4-6h (setup)", waitTime:"7-10 dias (observação)",
+   assist:"IA monitora comportamento do subset e sinaliza anomalias.",
+   orchestration:"IA gera relatório diário comparando subset vs controle.",
+   automation:"Rollback automático se métrica-chave degrada além do threshold.",
+   metrics:["Diferença de NPS subset vs controle","Nº de incidentes"],
+   risks:["Subset não captura edge cases raros"]},
+
+  {p:1, n:"2.8", nm:"Rollout completo", isWait:false,
+   actors:["MGMT","Taqtile"], mood:4,
+   process:"Expansão gradual para 100% dos usuários após validação do subset. Taqtile acompanha orquestração 5% → 25% → 50% → 100%.",
+   pains:["Ponto de não retorno — rollback caro em escala total"],
+   systems:["Plataforma MGMT","LangChain 1.10","CI/CD MGMT"],
+   artifacts:["Nova versão em produção para 100% dos usuários"],
+   processTime:"2-4h", waitTime:"0",
+   assist:"—",
+   orchestration:"IA orquestra expansão gradual com gates por etapa.",
+   automation:"Gate automático de progressão baseado em métricas de saúde.",
+   metrics:["Tempo de rollout completo","Nº de incidentes durante expansão"],
+   risks:["Degradação detectada tarde demais para rollback limpo"]},
+
+  {p:1, n:"2.9", nm:"Estabilização pós-rollout", isWait:true,
+   actors:["Taqtile"], mood:3,
+   process:"Observação ativa e ajuste fino após rollout completo. Taqtile mantém vigilância até que MGMT assuma monitoramento.",
+   pains:["Bugs de baixa frequência só aparecem em escala","Instabilidade prolongada atrasa início da Fase 3"],
+   systems:["Plataforma validação Taqtile","LangWatch Scenario"],
+   artifacts:["Correções pontuais","Relatório de estabilização"],
+   processTime:"8-12h", waitTime:"5-10 dias (observação em produção)",
+   assist:"IA monitora e alerta para padrões anômalos emergentes.",
+   orchestration:"IA gera relatório semanal de saúde do sistema.",
+   automation:"Alertas proativos em dashboards MGMT.",
+   metrics:["MTBF (mean time between failures)","Taxa de tickets pós-rollout"],
+   risks:["Instabilidade crônica impede hand-off"]},
+
+  // FASE 3
+  {p:2, n:"3.1", nm:"Documentação operacional", isWait:false,
+   actors:["Taqtile"], mood:4,
+   process:"Taqtile produz documentação pensada para um operador único. Cobre arquitetura, fluxos críticos, operação da suíte de evals e troubleshooting de problemas comuns.",
+   pains:["Trade-off entre completude e usabilidade","Docs genéricas não são acionáveis"],
+   systems:["Notion","Plataforma validação Taqtile"],
+   artifacts:["Documento operacional completo","Runbook de incidentes"],
+   processTime:"10-15h", waitTime:"0",
+   assist:"—",
+   orchestration:"IA gera esqueleto de documentação a partir do código, Taqtile revisa.",
+   automation:"—",
+   metrics:["Completude da documentação","Legibilidade (teste com leitor não-autor)"],
+   risks:["Documentação não sobrevive à primeira mudança de código"]},
+
+  {p:2, n:"3.2", nm:"Treinamento operacional", isWait:false,
+   actors:["MGMT","Taqtile"], mood:4,
+   process:"Sessões práticas onde MGMT opera a suíte solo, interpreta relatórios, executa rollback e adiciona novos cenários — sob observação de Taqtile.",
+   pains:["MGMT precisa de bandwidth para absorver o conhecimento","Aprovar treinamento sem realmente dominar"],
+   systems:["Plataforma validação Taqtile","CI/CD MGMT"],
+   artifacts:["Checklist de competências dominadas","Vídeos de sessões"],
+   processTime:"6-10h", waitTime:"0",
+   assist:"IA gera cenários de treinamento a partir de bugs históricos.",
+   orchestration:"—",
+   automation:"—",
+   metrics:["% de tarefas executadas por MGMT sem ajuda","Tempo médio por tarefa solo"],
+   risks:["MGMT aprova treinamento por cortesia, não por domínio real"]},
+
+  {p:2, n:"3.3", nm:"Runbook de situações críticas", isWait:false,
+   actors:["Taqtile"], mood:4,
+   process:"Taqtile produz guias específicos para cenários de falha mais prováveis (Bedrock indisponível, drift detectado, custo disparou, regressão em produção).",
+   pains:["Impossível prever todos os cenários","Runbooks não testados em situações reais"],
+   systems:["Notion"],
+   artifacts:["Runbooks por cenário crítico","Matriz de escalação"],
+   processTime:"4-6h", waitTime:"0",
+   assist:"IA gera runbooks a partir de histórico de incidentes.",
+   orchestration:"—",
+   automation:"—",
+   metrics:["Nº de cenários cobertos por runbook","Aderência de MGMT ao runbook em simulação"],
+   risks:["Runbook decorativo se não for exercitado"]},
+
+  {p:2, n:"3.4", nm:"Call de transição final", isWait:false,
+   actors:["MGMT","Taqtile"], mood:4,
+   process:"Sessão final de encerramento. Revisão do que foi entregue, confirmação da autonomia de MGMT, definição de cadência opcional de check-in.",
+   pains:["MGMT pode pedir extensão por insegurança, não por necessidade real"],
+   systems:["Google Meet","Notion"],
+   artifacts:["Termo de encerramento","Cadência pós-hand-off definida"],
+   processTime:"2h", waitTime:"0",
+   assist:"—",
+   orchestration:"—",
+   automation:"—",
+   metrics:["NPS final","Confiança declarada para operar solo"],
+   risks:["Encerramento prematuro se MGMT não tiver domínio real"]},
+
+  {p:2, n:"3.5", nm:"Check-in opcional pós-saída", isWait:false,
+   actors:["MGMT","Taqtile"], mood:5,
+   process:"Check-in mensal por 3 meses (sem custo adicional). Taqtile responde dúvidas pontuais e revisa saúde do framework. Após 3 meses: suporte on-demand.",
+   pains:["Dependência residual se MGMT usar como muleta permanente"],
+   systems:["Google Meet","Plataforma validação Taqtile"],
+   artifacts:["Notas de check-in mensal","Relatório de saúde do framework"],
+   processTime:"1h/mês", waitTime:"0",
+   assist:"IA gera relatório mensal de saúde automaticamente, MGMT revisa antes do check-in.",
+   orchestration:"—",
+   automation:"Relatório mensal gerado sem input humano.",
+   metrics:["Frequência de contato MGMT↔Taqtile","Tópicos recorrentes (sinal de gap no hand-off)"],
+   risks:["Check-in vira staff aug disfarçado"]}
+];
+
+document.getElementById('bp-title').textContent = TITLE;
+document.getElementById('bp-subtitle').textContent = SUBTITLE;
+document.getElementById('bp-thesis').textContent = THESIS;
+
+var alHtml = '';
+Object.keys(ACTOR_COLORS).forEach(function(name){
+  alHtml += '<span class="actor-sample" style="background:'+ACTOR_COLORS[name]+'">'+name+'</span> ';
+});
+document.getElementById('actor-legend').innerHTML = alHtml;
+
+var LANES_BLOCK1 = [
+  {id:"actors", icon:"\uD83D\uDC65", label:"ATORES", sub:"Quem participa", cls:"lane-actors"},
+  {id:"mood", icon:"\uD83D\uDE10", label:"HUMOR", sub:"Experiência do ator (1-5)", cls:"lane-mood"},
+  {id:"process", icon:"\uD83D\uDCCB", label:"PROCESSO ATUAL", sub:"O que acontece hoje", cls:"lane-process"},
+  {id:"pains", icon:"\uD83D\uDD25", label:"DORES", sub:"Frustrações e gargalos", cls:"lane-pains"},
+  {id:"systems", icon:"\u2699\uFE0F", label:"SISTEMAS", sub:"Ferramentas usadas", cls:"lane-systems"},
+  {id:"artifacts", icon:"\uD83D\uDCE6", label:"ARTEFATOS", sub:"O que este step produz", cls:"lane-artifacts"},
+  {id:"time", icon:"\u23F1\uFE0F", label:"TEMPO", sub:"Processo + espera", cls:"lane-time"}
+];
+
+var LANES_BLOCK2 = [
+  {id:"assist", icon:"\uD83E\uDD16", label:"ASSISTENTE", sub:"Copiloto", cls:"lane-assist"},
+  {id:"orq", icon:"\uD83C\uDFAF", label:"ORQUESTRAÇÃO", sub:"Agente coordenador", cls:"lane-orq"},
+  {id:"auto", icon:"\u26A1", label:"AUTOMAÇÃO", sub:"Agente autônomo", cls:"lane-auto"}
+];
+
+var LANES_BLOCK3 = [
+  {id:"nivelAtual", icon:"\uD83D\uDCCA", label:"NÍVEL ATUAL", sub:"Preencher no workshop", cls:"lane-workshop"},
+  {id:"nivelAlvo", icon:"\uD83C\uDFAF", label:"NÍVEL-ALVO", sub:"Preencher no workshop", cls:"lane-workshop"}
+];
+
+var LANES_BLOCK4 = [
+  {id:"metrics", icon:"\uD83D\uDCCF", label:"MÉTRICAS", sub:"Como medir", cls:"lane-metrics"},
+  {id:"risks", icon:"\u26A0\uFE0F", label:"RISCOS", sub:"O que pode dar errado", cls:"lane-risks"}
+];
+
+var N = STEPS.length;
+var COL_W = 210;
+var LABEL_W = 130;
+var TABLE_W = N * COL_W + LABEL_W;
+
+function esc(s){return s ? s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : '';}
+function actorTag(name){var c=ACTOR_COLORS[name]||"#616161";return '<span class="actor-tag" style="background:'+c+'">'+esc(name)+'</span>';}
+function sysTag(name){var c=SYS_COLORS[name]||"#616161";return '<span class="sys-tag" style="color:'+c+';border-color:'+c+'40;background:'+c+'18">'+esc(name)+'</span>';}
+function painList(arr){if(!arr||!arr.length)return '<span class="ai-empty">\u2014</span>';var h='<ul class="pain-text" style="list-style:disc;padding-left:14px;margin:0">';arr.forEach(function(p){h+='<li>'+esc(p)+'</li>';});return h+'</ul>';}
+function riskList(arr){if(!arr||!arr.length)return '<span class="ai-empty">\u2014</span>';var h='<ul class="risk-text" style="list-style:disc;padding-left:14px;margin:0">';arr.forEach(function(r){h+='<li>'+esc(r)+'</li>';});return h+'</ul>';}
+function metricList(arr){if(!arr||!arr.length)return '<span class="ai-empty">\u2014</span>';var h='';arr.forEach(function(m){h+='<div class="metric-item">'+esc(m)+'</div>';});return h;}
+function aiText(s){if(!s||s==='\u2014'||s==='—')return '<span class="ai-empty">\u2014</span>';return '<span class="ai-text">'+esc(s)+'</span>';}
+
+var t = document.getElementById('bp');
+t.style.width = TABLE_W + 'px';
+var html = '';
+
+html += '<colgroup><col style="width:'+LABEL_W+'px;min-width:'+LABEL_W+'px">';
+for(var i=0;i<N;i++) html += '<col style="width:'+COL_W+'px;min-width:'+COL_W+'px">';
+html += '</colgroup>';
+
+html += '<tr><td class="phase-cell" style="background:#1C1C1C;position:sticky;left:0;z-index:12">&nbsp;</td>';
+PHASES.forEach(function(ph){html += '<td class="phase-cell" colspan="'+ph.count+'" style="background:'+ph.color+';border-left:2px solid rgba(255,255,255,.3)">'+esc(ph.name)+'</td>';});
+html += '</tr>';
+
+html += '<tr><td class="row-label" style="background:#1C1C1C;border-bottom:2px solid #FF7A0D;z-index:12"><span class="rl-icon" style="color:#FF7A0D">\uD83D\uDCCD</span><span class="rl-main" style="color:#FF7A0D">STEP</span></td>';
+STEPS.forEach(function(s){var ph=PHASES[s.p];var cls=s.isWait?'step-hdr step-hdr-wait':'step-hdr';html+='<td class="'+cls+'"><span class="step-dot" style="background:'+ph.color+'">'+esc(s.n)+'</span><br><span class="step-name">'+esc(s.nm)+'</span>';if(s.isWait)html+='<br><span class="wait-badge">\u26A0\uFE0F WAIT</span>';html+='</td>';});
+html += '</tr>';
+
+function sepRow(label){return '<tr class="sep-row"><td class="row-label" style="background:#1C1C1C;color:#FF7A0D;position:sticky;left:0;z-index:10;border-color:#1C1C1C">&nbsp;</td><td colspan="'+N+'" style="background:#1C1C1C;color:#FF7A0D;font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;text-align:center;padding:6px 8px;border-color:#1C1C1C">'+esc(label)+'</td></tr>';}
+
+html += sepRow('\u2014 O QUE ACONTECE HOJE \u2014');
+
+LANES_BLOCK1.forEach(function(lane){
+  html += '<tr class="'+lane.cls+'"><td class="row-label '+lane.cls+'"><span class="rl-icon">'+lane.icon+'</span><span class="rl-main">'+esc(lane.label)+'</span><div class="rl-sub">'+esc(lane.sub)+'</div></td>';
+  if(lane.id==='mood'){
+    html += '<td class="cell mood-cell" colspan="'+N+'" style="padding:4px 0;background:#FFF8F3"><div id="mood-container" style="width:'+(N*COL_W)+'px;height:80px;position:relative"></div></td>';
+  } else {
+    STEPS.forEach(function(s){
+      html += '<td class="cell">';
+      if(lane.id==='actors')(s.actors||[]).forEach(function(a){html+=actorTag(a);});
+      else if(lane.id==='process')html+='<span style="font-size:10px;line-height:1.5">'+esc(s.process)+'</span>';
+      else if(lane.id==='pains')html+=painList(s.pains);
+      else if(lane.id==='systems')(s.systems||[]).forEach(function(sy){html+=sysTag(sy);});
+      else if(lane.id==='artifacts'){if(s.artifacts&&s.artifacts.length)s.artifacts.forEach(function(a){html+='<div style="font-size:10px;margin-bottom:1px">\u2022 '+esc(a)+'</div>';});else html+='<span class="ai-empty">\u2014</span>';}
+      else if(lane.id==='time'){html+='<div><span class="time-process">\u23F3 '+esc(s.processTime)+'</span></div>';if(s.isWait)html+='<div style="margin-top:3px"><span class="time-wait-critical">\u26A0\uFE0F '+esc(s.waitTime)+'</span></div>';else html+='<div style="margin-top:3px;font-size:10px;color:#9E9E9E">\u23F8 '+esc(s.waitTime)+'</div>';}
+      html += '</td>';
+    });
+  }
+  html += '</tr>';
+});
+
+html += sepRow('\u2014 COMO IA PODE AJUDAR \u2014');
+
+LANES_BLOCK2.forEach(function(lane){
+  html += '<tr class="'+lane.cls+'"><td class="row-label '+lane.cls+'"><span class="rl-icon">'+lane.icon+'</span><span class="rl-main">'+esc(lane.label)+'</span><div class="rl-sub">'+esc(lane.sub)+'</div></td>';
+  STEPS.forEach(function(s){html+='<td class="cell">';if(lane.id==='assist')html+=aiText(s.assist);else if(lane.id==='orq')html+=aiText(s.orchestration);else if(lane.id==='auto')html+=aiText(s.automation);html+='</td>';});
+  html += '</tr>';
+});
+
+html += sepRow('\u2014 DECISÃO DO TIME (PREENCHER NO WORKSHOP) \u2014');
+
+LANES_BLOCK3.forEach(function(lane){
+  html += '<tr class="'+lane.cls+'"><td class="row-label '+lane.cls+'"><span class="rl-icon">'+lane.icon+'</span><span class="rl-main">'+esc(lane.label)+'</span><div class="rl-sub">'+esc(lane.sub)+'</div></td>';
+  STEPS.forEach(function(){html+='<td class="cell" style="border-style:dashed"><div class="workshop-placeholder">Preencher no workshop</div></td>';});
+  html += '</tr>';
+});
+
+html += sepRow('\u2014 MEDIÇÃO \u2014');
+
+LANES_BLOCK4.forEach(function(lane){
+  html += '<tr class="'+lane.cls+'"><td class="row-label '+lane.cls+'"><span class="rl-icon">'+lane.icon+'</span><span class="rl-main">'+esc(lane.label)+'</span><div class="rl-sub">'+esc(lane.sub)+'</div></td>';
+  STEPS.forEach(function(s){html+='<td class="cell">';if(lane.id==='metrics')html+=metricList(s.metrics);else if(lane.id==='risks')html+=riskList(s.risks);html+='</td>';});
+  html += '</tr>';
+});
+
+t.innerHTML = html;
+
+(function(){
+  var container=document.getElementById('mood-container');if(!container)return;
+  var moods=STEPS.map(function(s){return s.mood;});
+  var w=N*COL_W,h=80,padTop=12,padBot=12,plotH=h-padTop-padBot;
+  function moodY(v){return padTop+plotH-((v-1)/4)*plotH;}
+  function stepX(i){return(i+0.5)*COL_W;}
+  var points=moods.map(function(m,i){return{x:stepX(i),y:moodY(m)};});
+  function catmullRomToBezier(pts){if(pts.length<2)return '';var d='M '+pts[0].x+' '+pts[0].y;for(var i=0;i<pts.length-1;i++){var p0=pts[Math.max(i-1,0)],p1=pts[i],p2=pts[Math.min(i+1,pts.length-1)],p3=pts[Math.min(i+2,pts.length-1)],tension=0.35;d+=' C '+(p1.x+(p2.x-p0.x)*tension)+','+(p1.y+(p2.y-p0.y)*tension)+' '+(p2.x-(p3.x-p1.x)*tension)+','+(p2.y-(p3.y-p1.y)*tension)+' '+p2.x+','+p2.y;}return d;}
+  var pathD=catmullRomToBezier(points);
+  var fillD=pathD+' L '+points[points.length-1].x+','+h+' L '+points[0].x+','+h+' Z';
+  var svg='<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg" style="display:block">';
+  svg+='<defs><linearGradient id="moodGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF7A0D" stop-opacity="0.25"/><stop offset="100%" stop-color="#FF7A0D" stop-opacity="0.03"/></linearGradient></defs>';
+  [1,2,3,4,5].forEach(function(v){var y=moodY(v);svg+='<line x1="0" y1="'+y+'" x2="'+w+'" y2="'+y+'" stroke="#E5DDDA" stroke-width="0.5" stroke-dasharray="4,4"/>';});
+  svg+='<text x="4" y="'+(moodY(5)-2)+'" font-size="10" fill="#9E9E9E" font-family="Helvetica Neue,Arial">\uD83D\uDE0A 5</text>';
+  svg+='<text x="4" y="'+(moodY(3)+4)+'" font-size="10" fill="#9E9E9E" font-family="Helvetica Neue,Arial">\uD83D\uDE10 3</text>';
+  svg+='<text x="4" y="'+(moodY(1)+4)+'" font-size="10" fill="#9E9E9E" font-family="Helvetica Neue,Arial">\uD83D\uDE24 1</text>';
+  for(var gi=1;gi<N;gi++)svg+='<line x1="'+(gi*COL_W)+'" y1="0" x2="'+(gi*COL_W)+'" y2="'+h+'" stroke="#E5DDDA" stroke-width="0.5"/>';
+  var cumulative=0;PHASES.forEach(function(ph,idx){if(idx>0)svg+='<line x1="'+(cumulative*COL_W)+'" y1="0" x2="'+(cumulative*COL_W)+'" y2="'+h+'" stroke="#BDBDBD" stroke-width="1.5"/>';cumulative+=ph.count;});
+  svg+='<path d="'+fillD+'" fill="url(#moodGrad)"/>';
+  svg+='<path d="'+pathD+'" fill="none" stroke="#FF7A0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+  points.forEach(function(pt,idx){var m=moods[idx];var dotColor=m<=2?'#C62828':(m>=4?'#2E7D32':'#FF7A0D');if(STEPS[idx].isWait)svg+='<circle cx="'+pt.x+'" cy="'+pt.y+'" r="10" fill="#C62828" fill-opacity="0.12"/>';svg+='<circle cx="'+pt.x+'" cy="'+pt.y+'" r="5" fill="'+dotColor+'" stroke="#fff" stroke-width="1.5"/>';svg+='<text x="'+pt.x+'" y="'+(pt.y-9)+'" text-anchor="middle" font-size="9" font-weight="700" fill="'+dotColor+'" font-family="Helvetica Neue,Arial">'+m+'</text>';});
+  svg+='</svg>';
+  container.innerHTML=svg;
+})();
+</script>
+</body>
+</html>
